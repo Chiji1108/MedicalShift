@@ -72,5 +72,14 @@ struct HorizontalMonthsView<Content>: View where Content: View {
             .padding(.horizontal, 8)
         }
         .navigationTitle(selectedMonth.formatted(.dateTime.month()))
+        .toolbar {
+            if !selectedMonth.isInSameMonth(as: Date.now) {
+                Button("Today") {
+                    withAnimation {
+                        selectedMonth = Date.now
+                    }
+                }
+            }
+        }
     }
 }

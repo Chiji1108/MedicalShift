@@ -34,32 +34,16 @@ struct VerticalMonthsView<Content>: View where Content: View {
     }
 
     var body: some View {
-
-
-            ScrollView(showsIndicators: false) {
-                LazyVStack {
-                    ForEach(dateRange.months, id: \.startOfMonth) { month in
-                        content(month)
-                    }
+        ScrollView(showsIndicators: false) {
+            LazyVStack {
+                ForEach(dateRange.months, id: \.startOfMonth) { month in
+                    content(month)
                 }
-                .scrollTargetLayout()
             }
-            .defaultScrollAnchor(.center)
-            .scrollPosition(id: scrollPosition, anchor: .center)
-            // .onAppear {
-            //     scrollPosition = Date.now.startOfMonth
-            // }
-
-
-        // .scrollPosition(initialAnchor: .center)
-        // .toolbar {
-        //     Button {
-        //         proxy.scrollTo(Date.now.startOfMonth)
-        //     } label: {
-        //         Text("Today")
-        //     }
-        // }
-
+            .scrollTargetLayout()
+        }
+        .defaultScrollAnchor(.center)
+        .scrollPosition(id: scrollPosition, anchor: .center)
     }
 }
 
@@ -73,9 +57,9 @@ struct VerticalMonthsView<Content>: View where Content: View {
                     .font(.system(size: 12, weight: .light))
             }
             .background(.ultraThinMaterial)
-            
+
             Divider()
-            
+
             VerticalMonthsView(selectedMonth: $selectedMonth) { month in
                 VStack(spacing: 4) {
                     CalendarHeaderView(month: month) {
@@ -115,5 +99,14 @@ struct VerticalMonthsView<Content>: View where Content: View {
             }
         }
         .navigationTitle(selectedMonth?.formatted(.dateTime.month()) ?? "")
+        .toolbar {
+            if let month = selectedMonth, !month.isInSameMonth(as: Date.now) {
+                Button("Today") {
+                    withAnimation {
+                        selectedMonth = Date.now
+                    }
+                }
+            }
+        }
     }
 }

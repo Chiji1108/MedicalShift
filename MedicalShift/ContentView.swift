@@ -60,6 +60,13 @@ struct ContentView: View {
                 }
             }
             .navigationTitle(selectedMonth?.formatted(.dateTime.month()) ?? "")
+            .toolbar {
+                if let month = selectedMonth, !month.isInSameMonth(as: Date.now) {
+                    Button("Today") {
+                        selectedMonth = Date.now
+                    }
+                }
+            }
         }
     }
 }

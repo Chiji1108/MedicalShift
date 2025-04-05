@@ -32,7 +32,7 @@ struct CalendarHeaderView<Content>: View where Content: View {
         switch alignment {
         case .startOfMonth:
             HStack(spacing: 0) {
-                ForEach(1...7, id: \.self) { i in
+                ForEach(1...Calendar.current.weekdaySymbols.count, id: \.self) { i in
                     if i == month.startOfMonth.weekday {
                         content()
                             .frame(maxWidth: .infinity)
