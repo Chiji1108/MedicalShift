@@ -73,10 +73,11 @@ struct VerticalMonthsView<Content>: View where Content: View {
                     .font(.system(size: 12, weight: .light))
             }
             .background(.ultraThinMaterial)
+            
             Divider()
             
             VerticalMonthsView(selectedMonth: $selectedMonth) { month in
-                VStack {
+                VStack(spacing: 4) {
                     CalendarHeaderView(month: month) {
                         VStack {
                             Text(month.formatted(.dateTime.year()))
@@ -84,20 +85,31 @@ struct VerticalMonthsView<Content>: View where Content: View {
                             Text(month.formatted(.dateTime.month()))
                                 .font(.system(size: 24, weight: .bold))
                         }
+                        .foregroundStyle(
+                            month.isInSameMonth(as: Date.now) ? .accentColor : Color.primary)
                     }
-                    CalendarBodyView(month: month) { day, isCurrentMonth in
-                        ZStack {
-                            if day.isToday {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(.gray.opacity(0.2))
-                            }
+                    CalendarBodyView(month: month) { day in
+                        VStack {
+                            Divider()
 
-                            Text("\(day.day)")
-                                .font(.system(size: 12, weight: .light))
-                                .frame(maxHeight: .infinity, alignment: .top)
+                            ZStack {
+                                if day.isToday {
+                                    Circle()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundStyle(.tint)
+                                }
+
+                                Text(day.day, format: .number.grouping(.never))
+                                    .font(.system(size: 12, weight: day.isToday ? .bold : .light))
+                                    .frame(width: 24, height: 24)
+                                    .foregroundStyle(day.isToday ? .white : .primary)
+
+                            }
+                            .frame(maxHeight: .infinity, alignment: .top)
                         }
-                        .frame(height: 80)
-                        .opacity(isCurrentMonth ? 1 : 0)
+                        .frame(height: 100)
+                        .frame(maxWidth: .infinity)
+                        .opacity(day.isInSameMonth(as: month) ? 1 : 0)
                     }
                 }
             }

@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CalendarBodyView<Content>: View where Content: View {
     let month: Date
-    let content: (_ day: Date, _ isCurrentMonth: Bool) -> Content
+    let content: (_ day: Date) -> Content
     public init(
         month: Date,
-        @ViewBuilder content: @escaping (_ day: Date, _ isCurrentMonth: Bool) -> Content
+        @ViewBuilder content: @escaping (_ day: Date) -> Content
     ) {
         self.month = month
         self.content = content
@@ -26,7 +26,7 @@ struct CalendarBodyView<Content>: View where Content: View {
             ), spacing: 0
         ) {
             ForEach(month.datesInCalendarMonth, id: \.self) { day in
-                content(day, day.isInSameMonth(as: month))
+                content(day)
                     .frame(maxWidth: .infinity)
             }
         }
@@ -34,7 +34,8 @@ struct CalendarBodyView<Content>: View where Content: View {
 }
 
 #Preview {
-    CalendarBodyView(month: Date()) { day, isCurrentMonth in
+    let month = Date()
+    CalendarBodyView(month: month) { day in
         ZStack {
             if day.isToday {
                 RoundedRectangle(cornerRadius: 8)
@@ -46,6 +47,6 @@ struct CalendarBodyView<Content>: View where Content: View {
                 .frame(maxHeight: .infinity, alignment: .top)
         }
         .frame(height: 80)
-        .opacity(isCurrentMonth ? 1 : 0.4)
+        .opacity(day.isInSameMonth(as: month) ? 1 : 0.4)
     }
 }
