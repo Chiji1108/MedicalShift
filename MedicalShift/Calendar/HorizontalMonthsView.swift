@@ -40,7 +40,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                     .tag(month.startOfMonth)
             }
         }
-        .tabViewStyle(.page)
+        .tabViewStyle(.page(indexDisplayMode: .never))
     }
 }
 
