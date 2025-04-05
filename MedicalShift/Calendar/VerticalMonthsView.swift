@@ -16,8 +16,8 @@ struct VerticalMonthsView<Content>: View where Content: View {
     public init(
         selectedMonth: Binding<Date?>,
         dateRange: ClosedRange<Date> = Calendar.current.date(
-            byAdding: .year, value: -10, to: Date.now)!...Calendar.current.date(
-                byAdding: .year, value: 10, to: Date.now)!,
+            byAdding: .year, value: -50, to: Date.now)!...Calendar.current.date(
+                byAdding: .year, value: 50, to: Date.now)!,
         @ViewBuilder content: @escaping (_ month: Date) -> Content
     ) {
         self._selectedMonth = selectedMonth
