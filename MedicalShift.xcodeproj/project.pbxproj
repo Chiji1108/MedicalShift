@@ -86,11 +86,11 @@
 				};
 			};
 			buildConfigurationList = C69531F42D9FC53F00D3BAEF /* Build configuration list for PBXProject "MedicalShift" */;
-			developmentRegion = en;
+			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				ja,
 			);
 			mainGroup = C69531F02D9FC53F00D3BAEF;
 			minimizedProjectReferenceProxies = 1;
