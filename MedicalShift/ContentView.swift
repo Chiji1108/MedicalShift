@@ -63,7 +63,9 @@ struct ContentView: View {
             .toolbar {
                 if let month = selectedMonth, !month.isInSameMonth(as: Date.now) {
                     Button("Today") {
-                        selectedMonth = Date.now
+                        withAnimation {
+                            selectedMonth = Date.now
+                        }
                     }
                 }
             }
