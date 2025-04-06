@@ -46,7 +46,7 @@ struct WeekdaySymbolsView<Content>: View where Content: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sizeThatFitsLayout) {
     WeekdaySymbolsView { weekdaySymbol in
         Text(weekdaySymbol)
             .font(.system(size: 12, weight: .light))
