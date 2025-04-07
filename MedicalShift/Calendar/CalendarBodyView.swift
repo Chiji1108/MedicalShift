@@ -25,7 +25,7 @@ struct CalendarBodyView<Content>: View where Content: View {
                 count: Calendar.current.weekdaySymbols.count
             ), spacing: 0
         ) {
-            ForEach(month.datesInCalendarMonth, id: \.self) { day in
+            ForEach(month.calnedarDates, id: \.self) { day in
                 content(day)
                     .frame(maxWidth: .infinity)
             }

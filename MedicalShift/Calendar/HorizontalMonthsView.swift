@@ -31,9 +31,10 @@ struct HorizontalMonthsView<Content>: View where Content: View {
     }
     
     private func loadMonths() {
+        let buffer = 3
         if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
             months =
-                selectedMonth.months(prev: -3, next: 3)
+                selectedMonth.months(prev: -buffer, next: buffer)
         }
     }
 

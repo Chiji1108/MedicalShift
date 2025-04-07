@@ -33,11 +33,12 @@ struct VerticalMonthsView<Content>: View where Content: View {
             }
         }
     }
-    
+
     private func loadMonths() {
+        let buffer = 10
         if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
             months =
-                selectedMonth.months(prev: -10, next: 10)
+                selectedMonth.months(prev: -buffer, next: buffer)
         }
     }
 
@@ -63,9 +64,11 @@ struct VerticalMonthsView<Content>: View where Content: View {
                             if isInitialRendering && month.isSameMonth(selectedMonth) {
                                 isInitialRendering = false
                                 // Glitchy
-                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
+                                selectedMonth = Calendar.current.date(
+                                    byAdding: .month, value: 1, to: selectedMonth)!
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                    selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth)!
+                                    selectedMonth = Calendar.current.date(
+                                        byAdding: .month, value: -1, to: selectedMonth)!
                                 }
                             }
                         }

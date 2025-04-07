@@ -50,7 +50,7 @@ extension Date {
         return self.startOfMonth == date.startOfMonth
     }
 
-    var datesInCalendarMonth: [Date] {
+    var calnedarDates: [Date] {
         let startDate = self.startOfMonth.startOfWeek
         let totalDays = self.weeksInMonth * Calendar.current.weekdaySymbols.count
 
