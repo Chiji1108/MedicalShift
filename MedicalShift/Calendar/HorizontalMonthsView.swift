@@ -49,7 +49,6 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                                 Month(date: Calendar.current.date(byAdding: .month, value: 1, to: month.date)!),
                             )
                         }
-
                     }
             }
         }

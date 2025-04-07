@@ -28,7 +28,9 @@ struct VerticalMonthsView<Content>: View where Content: View {
         Binding {
             selectedMonth.startOfMonth
         } set: { newValue in
-            selectedMonth = newValue ?? Date.now
+            if let newValue {
+                selectedMonth = newValue
+            }
         }
     }
 
@@ -54,10 +56,10 @@ struct VerticalMonthsView<Content>: View where Content: View {
                             if isInitialRendering && month.id == selectedMonth.startOfMonth {
                                 isInitialRendering = false
                                 // Glitchy
-                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                    selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth)!
-                                }
+//                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+//                                    selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth)!
+//                                }
                             }
                         }
                 }
