@@ -33,6 +33,13 @@ struct VerticalMonthsView<Content>: View where Content: View {
             }
         }
     }
+    
+    private func loadMonths() {
+        if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
+            months =
+                selectedMonth.months(previous: -10, following: 10)
+        }
+    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -56,10 +63,10 @@ struct VerticalMonthsView<Content>: View where Content: View {
                             if isInitialRendering && month.isSameMonth(selectedMonth) {
                                 isInitialRendering = false
                                 // Glitchy
-//                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-//                                    selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth)!
-//                                }
+                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                    selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth)!
+                                }
                             }
                         }
                 }
@@ -69,19 +76,13 @@ struct VerticalMonthsView<Content>: View where Content: View {
         .defaultScrollAnchor(.center)
         .scrollPosition(id: scrolledID, anchor: .center)
         .onAppear {
-            if months.isEmpty {
-                months =
-                    selectedMonth.months(previous: -10, following: 10)
-            }
+            loadMonths()
+        }
+        .onChange(of: selectedMonth) {
+            loadMonths()
         }
         .onDisappear {
             isInitialRendering = true
-        }
-        .onChange(of: selectedMonth) {
-            if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
-                months =
-                    selectedMonth.months(previous: -10, following: 10)
-            }
         }
     }
 }

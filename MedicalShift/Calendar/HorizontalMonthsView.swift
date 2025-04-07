@@ -29,6 +29,13 @@ struct HorizontalMonthsView<Content>: View where Content: View {
             selectedMonth = newValue
         }
     }
+    
+    private func loadMonths() {
+        if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
+            months =
+                selectedMonth.months(previous: -3, following: 3)
+        }
+    }
 
 
     var body: some View {
@@ -54,15 +61,10 @@ struct HorizontalMonthsView<Content>: View where Content: View {
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .onAppear {
-            if months.isEmpty {
-                months = selectedMonth.months(previous: -3, following: 3)
-            }
+            loadMonths()
         }
         .onChange(of: selectedMonth) {
-            if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
-                months =
-                    selectedMonth.months(previous: -3, following: 3)
-            }
+            loadMonths()
         }
     }
 }
