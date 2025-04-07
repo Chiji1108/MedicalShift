@@ -9,11 +9,9 @@ import SwiftUI
 
 struct VerticalMonthsView<Content>: View where Content: View {
     @Binding var selectedMonth: Date
-
     let content: (_ month: Date) -> Content
 
     @State private var months: [Date] = []
-
     @State private var isInitialRendering = true
 
     public init(
@@ -32,6 +30,10 @@ struct VerticalMonthsView<Content>: View where Content: View {
                 selectedMonth = newValue
             }
         }
+    }
+
+    private var initialScrolledID: Binding<Date?> {
+        Binding(get: { nil }, set: { _ in })
     }
 
     private func loadMonths() {
@@ -63,13 +65,6 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
                             if isInitialRendering && month.isSameMonth(selectedMonth) {
                                 isInitialRendering = false
-                                // Glitchy
-                                selectedMonth = Calendar.current.date(
-                                    byAdding: .month, value: 1, to: selectedMonth)!
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                    selectedMonth = Calendar.current.date(
-                                        byAdding: .month, value: -1, to: selectedMonth)!
-                                }
                             }
                         }
                 }
@@ -77,7 +72,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
             .scrollTargetLayout()
         }
         .defaultScrollAnchor(.center)
-        .scrollPosition(id: scrolledID, anchor: .center)
+        .scrollPosition(id: isInitialRendering ? initialScrolledID : scrolledID, anchor: .center)
         .onAppear {
             loadMonths()
         }
