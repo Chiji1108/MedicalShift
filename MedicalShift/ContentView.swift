@@ -8,16 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedMonth: Date? = Date.now
-
+    @State private var selectedMonth: Date = Date()
     var body: some View {
         TabView {
             Tab("Horizontal", systemImage: "distribute.horizontal") {
-                HorizontalCalendarView()
+                HorizontalCalendarView(selectedMonth: $selectedMonth)
             }
 
             Tab("Vertical", systemImage: "distribute.vertical") {
-                VerticalCalendarView()
+                VerticalCalendarView(selectedMonth: $selectedMonth)
             }
         }
     }

@@ -8,47 +8,86 @@
 import SwiftUI
 
 struct VerticalMonthsView<Content>: View where Content: View {
-    @Binding var selectedMonth: Date?
+    @Binding var selectedMonth: Date
 
-    private let dateRange: ClosedRange<Date>
     let content: (_ month: Date) -> Content
 
+    @State private var months: [Month] = []
+
+    @State private var isInitialRendering = true
+
     public init(
-        selectedMonth: Binding<Date?>,
-        dateRange: ClosedRange<Date> = Calendar.current.date(
-            byAdding: .year, value: -50, to: Date.now)!...Calendar.current.date(
-                byAdding: .year, value: 50, to: Date.now)!,
+        selectedMonth: Binding<Date>,
         @ViewBuilder content: @escaping (_ month: Date) -> Content
     ) {
         self._selectedMonth = selectedMonth
-        self.dateRange = dateRange
         self.content = content
     }
 
-    var scrollPosition: Binding<Date?> {
+    private var scrolledID: Binding<Month.ID?> {
         Binding {
-            selectedMonth?.startOfMonth
+            selectedMonth.startOfMonth
         } set: { newValue in
-            selectedMonth = newValue
+            selectedMonth = newValue ?? Date.now
         }
     }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
-                ForEach(dateRange.months, id: \.startOfMonth) { month in
-                    content(month)
+                ForEach(months) { month in
+                    content(month.date)
+                        .onAppear {
+                            if months.first == month {
+                                months.insert(
+                                    Month(date: Calendar.current.date(byAdding: .month, value: -1, to: month.date)!),
+                                    at: 0
+                                )
+                            }
+
+                            if months.last == month {
+                                months.append(
+                                    Month(date: Calendar.current.date(byAdding: .month, value: 1, to: month.date)!),
+                                )
+                            }
+
+                            if isInitialRendering && month.id == selectedMonth.startOfMonth {
+                                isInitialRendering = false
+                                // Glitchy
+                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                                    selectedMonth = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonth)!
+                                }
+                            }
+                        }
                 }
             }
             .scrollTargetLayout()
         }
         .defaultScrollAnchor(.center)
-        .scrollPosition(id: scrollPosition, anchor: .center)
+        .scrollPosition(id: scrolledID, anchor: .center)
+        .onAppear {
+            months =
+                (Calendar.current.date(
+                    byAdding: .month, value: -10, to: selectedMonth)!...Calendar.current.date(
+                    byAdding: .month, value: 10, to: selectedMonth)!).months.map { Month(date: $0) }
+        }
+        .onDisappear {
+            isInitialRendering = true
+        }
+        .onChange(of: selectedMonth) {
+            if !months.contains(where: { $0.id == selectedMonth.startOfMonth }) {
+                months =
+                    (Calendar.current.date(
+                        byAdding: .month, value: -10, to: selectedMonth)!...Calendar.current.date(
+                        byAdding: .month, value: 10, to: selectedMonth)!).months.map { Month(date: $0) }
+            }
+        }
     }
 }
 
 #Preview {
-    @Previewable @State var selectedMonth: Date? = Date.now
+    @Previewable @State var selectedMonth: Date = Date.now
 
     NavigationStack {
         VStack(spacing: 0) {
@@ -98,15 +137,18 @@ struct VerticalMonthsView<Content>: View where Content: View {
                 }
             }
         }
-        .navigationTitle(selectedMonth?.formatted(.dateTime.month()) ?? "")
+        .navigationTitle(selectedMonth.formatted(.dateTime.month()))
         .toolbar {
-            if let month = selectedMonth, !month.isInSameMonth(as: Date.now) {
+            if !selectedMonth.isInSameMonth(as: Date.now) {
                 Button("Today") {
                     withAnimation {
                         selectedMonth = Date.now
                     }
                 }
             }
+
+            DatePicker("Select a month", selection: $selectedMonth, displayedComponents: .date)
+                .labelsHidden()
         }
     }
 }

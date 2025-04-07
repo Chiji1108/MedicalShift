@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct VerticalCalendarView: View {
-    @State private var selectedMonth: Date? = Date.now
-    
+    @Binding var selectedMonth: Date
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -59,20 +59,24 @@ struct VerticalCalendarView: View {
                     }
                 }
             }
-            .navigationTitle(selectedMonth?.formatted(.dateTime.month()) ?? "")
+            .navigationTitle(selectedMonth.formatted(.dateTime.month()))
             .toolbar {
-                if let month = selectedMonth, !month.isInSameMonth(as: Date.now) {
+                if !selectedMonth.isInSameMonth(as: Date.now) {
                     Button("Today") {
                         withAnimation {
                             selectedMonth = Date.now
                         }
                     }
                 }
+
+                DatePicker("Select a month", selection: $selectedMonth, displayedComponents: .date)
+                    .labelsHidden()
             }
         }
     }
 }
 
 #Preview {
-    VerticalCalendarView()
+    @Previewable @State var selectedMonth = Date.now
+    VerticalCalendarView(selectedMonth: $selectedMonth)
 }

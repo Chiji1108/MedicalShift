@@ -13,8 +13,8 @@ struct Item: Identifiable, Equatable {
 }
 
 struct InfiniteScrollView: View {
-    let initialPosition: Item.ID = 50
-    @State private var items: [Item] = (40..<60).map { Item(id: $0, title: "Item \($0)") }
+    let initialPosition: Item.ID = 0
+    @State private var items: [Item] = []
     @State private var position = ScrollPosition(idType: Item.ID.self, edge: .bottom)
     @State private var initialPositionSet = false
 
@@ -57,16 +57,19 @@ struct InfiniteScrollView: View {
             .scrollPosition($position, anchor: .center)
             .navigationTitle("\(viewID)")
             .onAppear {
+                items = (initialPosition - 10..<initialPosition + 10).map {
+                    Item(id: $0, title: "Item \($0)")
+                }
                 position.scrollTo(id: viewID, anchor: .center)
             }
             .toolbar {
-                // Button {
-                //     withAnimation {
-                //         position.scrollTo(id: viewID, anchor: .center)
-                //     }
-                // } label: {
-                //     Text("Scroll to \(viewID)")
-                // }
+                Button {
+                    withAnimation {
+                        position.scrollTo(id: viewID, anchor: .center)
+                    }
+                } label: {
+                    Text("Scroll to \(viewID)")
+                }
             }
             // .onChange(of: items) {
             //     withAnimation {

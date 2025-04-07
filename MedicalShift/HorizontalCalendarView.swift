@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct HorizontalCalendarView: View {
-    @State private var selectedMonth: Date = Date.now
+    @Binding var selectedMonth: Date
     
     var body: some View {
         NavigationStack {
             HorizontalMonthsView(selectedMonth: $selectedMonth) { month in
-                ScrollView {
+                VStack(spacing: 0) {
                     WeekdaySymbolsView { weekdaySymbol in
                         Text(weekdaySymbol)
                             .font(.system(size: 12, weight: .light))
@@ -26,6 +26,7 @@ struct HorizontalCalendarView: View {
                             }
 
                             Text(day.day, format: .number.grouping(.never))
+                                .padding(4)
                                 .font(.system(size: 12, weight: .light))
                                 .frame(maxHeight: .infinity, alignment: .top)
                         }
@@ -33,6 +34,7 @@ struct HorizontalCalendarView: View {
                         .opacity(day.isInSameMonth(as: month) ? 1 : 0.4)
                     }
                 }
+                .frame(maxHeight: .infinity, alignment: .top)
                 .padding(.horizontal, 8)
             }
             .navigationTitle(selectedMonth.formatted(.dateTime.month()))
@@ -44,11 +46,15 @@ struct HorizontalCalendarView: View {
                         }
                     }
                 }
+
+                DatePicker("Select a month", selection: $selectedMonth, displayedComponents: .date)
+                    .labelsHidden()
             }
         }
     }
 }
 
 #Preview {
-    HorizontalCalendarView()
+    @Previewable @State var selectedMonth = Date.now
+    HorizontalCalendarView(selectedMonth: $selectedMonth)
 }

@@ -9,23 +9,20 @@ import SwiftUI
 
 struct HorizontalMonthsView<Content>: View where Content: View {
     @Binding private var selectedMonth: Date
-    private let dateRange: ClosedRange<Date>
+
+    @State private var months: [Month] = []
 
     let content: (_ month: Date) -> Content
     public init(
         selectedMonth: Binding<Date>,
-        in dateRange: ClosedRange<Date> = Calendar.current.date(
-            byAdding: .year, value: -50, to: Date.now)!...Calendar.current.date(
-                byAdding: .year, value: 50, to: Date.now)!,
         @ViewBuilder content: @escaping (_ month: Date) ->
             Content
     ) {
         self._selectedMonth = selectedMonth
-        self.dateRange = dateRange
         self.content = content
     }
 
-    private var selection: Binding<Date> {
+    private var selection: Binding<Month.ID> {
         Binding {
             selectedMonth.startOfMonth
         } set: { newValue in
@@ -33,14 +30,43 @@ struct HorizontalMonthsView<Content>: View where Content: View {
         }
     }
 
+
     var body: some View {
         TabView(selection: selection) {
-            ForEach(dateRange.months, id: \.startOfMonth) { month in
-                content(month)
-                    .tag(month.startOfMonth)
+            ForEach(months) { month in
+                content(month.date)
+                    .tag(month.id)
+                    .onAppear {
+                        if months.first == month {
+                            months.insert(
+                                Month(date: Calendar.current.date(byAdding: .month, value: -1, to: month.date)!),
+                                at: 0
+                            )
+                        }
+
+                        if months.last == month {
+                            months.append(
+                                Month(date: Calendar.current.date(byAdding: .month, value: 1, to: month.date)!),
+                            )
+                        }
+
+                    }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
+        .onAppear {
+            months = (Calendar.current.date(
+            byAdding: .month, value: -3, to: selectedMonth)!...Calendar.current.date(
+                byAdding: .month, value: 3, to: selectedMonth)!).months.map { Month(date: $0) }
+        }
+        .onChange(of: selectedMonth) {
+            if !months.contains(where: { $0.id == selectedMonth.startOfMonth }) {
+                months =
+                    (Calendar.current.date(
+                        byAdding: .month, value: -3, to: selectedMonth)!...Calendar.current.date(
+                        byAdding: .month, value: 3, to: selectedMonth)!).months.map { Month(date: $0) }
+            }
+        }
     }
 }
 
@@ -49,7 +75,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
 
     NavigationStack {
         HorizontalMonthsView(selectedMonth: $selectedMonth) { month in
-            ScrollView {
+            VStack(spacing: 0) {
                 WeekdaySymbolsView { weekdaySymbol in
                     Text(weekdaySymbol)
                         .font(.system(size: 12, weight: .light))
@@ -62,6 +88,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                         }
 
                         Text(day.day, format: .number.grouping(.never))
+                            .padding(4)
                             .font(.system(size: 12, weight: .light))
                             .frame(maxHeight: .infinity, alignment: .top)
                     }
@@ -69,6 +96,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                     .opacity(day.isInSameMonth(as: month) ? 1 : 0.4)
                 }
             }
+            .frame(maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 8)
         }
         .navigationTitle(selectedMonth.formatted(.dateTime.month()))
@@ -80,6 +108,9 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                     }
                 }
             }
+
+            DatePicker("Select a month", selection: $selectedMonth, displayedComponents: .date)
+                .labelsHidden()
         }
     }
 }
