@@ -59,8 +59,8 @@ extension Date {
         }
     }
 
-    func months(previous: Int, following: Int) -> [Date] {
-        (previous...following).map { month in
+    func months(prev: Int, next: Int) -> [Date] {
+        (prev...next).map { month in
             Calendar.current.date(byAdding: .month, value: month, to: self)!
         }
     }

@@ -37,7 +37,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
     private func loadMonths() {
         if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
             months =
-                selectedMonth.months(previous: -10, following: 10)
+                selectedMonth.months(prev: -10, next: 10)
         }
     }
 
