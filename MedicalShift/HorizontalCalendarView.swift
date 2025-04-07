@@ -31,7 +31,7 @@ struct HorizontalCalendarView: View {
                                 .frame(maxHeight: .infinity, alignment: .top)
                         }
                         .frame(height: 80)
-                        .opacity(day.isInSameMonth(as: month) ? 1 : 0.4)
+                        .opacity(day.isSameMonth(month) ? 1 : 0.4)
                     }
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
@@ -39,7 +39,7 @@ struct HorizontalCalendarView: View {
             }
             .navigationTitle(selectedMonth.formatted(.dateTime.month()))
             .toolbar {
-                if !selectedMonth.isInSameMonth(as: Date.now) {
+                if !selectedMonth.isSameMonth(Date.now) {
                     Button("Today") {
                         withAnimation {
                             selectedMonth = Date.now

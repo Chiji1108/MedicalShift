@@ -12,7 +12,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
     let content: (_ month: Date) -> Content
 
-    @State private var months: [Month] = []
+    @State private var months: [Date] = []
 
     @State private var isInitialRendering = true
 
@@ -24,7 +24,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
         self.content = content
     }
 
-    private var scrolledID: Binding<Month.ID?> {
+    private var scrolledID: Binding<Date?> {
         Binding {
             selectedMonth.startOfMonth
         } set: { newValue in
@@ -37,23 +37,23 @@ struct VerticalMonthsView<Content>: View where Content: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
-                ForEach(months) { month in
-                    content(month.date)
+                ForEach(months, id: \.startOfMonth) { month in
+                    content(month)
                         .onAppear {
                             if months.first == month {
                                 months.insert(
-                                    Month(date: Calendar.current.date(byAdding: .month, value: -1, to: month.date)!),
+                                    Calendar.current.date(byAdding: .month, value: -1, to: month)!,
                                     at: 0
                                 )
                             }
 
                             if months.last == month {
                                 months.append(
-                                    Month(date: Calendar.current.date(byAdding: .month, value: 1, to: month.date)!),
+                                    Calendar.current.date(byAdding: .month, value: 1, to: month)!
                                 )
                             }
 
-                            if isInitialRendering && month.id == selectedMonth.startOfMonth {
+                            if isInitialRendering && month.isSameMonth(selectedMonth) {
                                 isInitialRendering = false
                                 // Glitchy
 //                                selectedMonth = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth)!
@@ -69,20 +69,18 @@ struct VerticalMonthsView<Content>: View where Content: View {
         .defaultScrollAnchor(.center)
         .scrollPosition(id: scrolledID, anchor: .center)
         .onAppear {
-            months =
-                (Calendar.current.date(
-                    byAdding: .month, value: -10, to: selectedMonth)!...Calendar.current.date(
-                    byAdding: .month, value: 10, to: selectedMonth)!).months.map { Month(date: $0) }
+            if months.isEmpty {
+                months =
+                    selectedMonth.months(previous: -10, following: 10)
+            }
         }
         .onDisappear {
             isInitialRendering = true
         }
         .onChange(of: selectedMonth) {
-            if !months.contains(where: { $0.id == selectedMonth.startOfMonth }) {
+            if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
                 months =
-                    (Calendar.current.date(
-                        byAdding: .month, value: -10, to: selectedMonth)!...Calendar.current.date(
-                        byAdding: .month, value: 10, to: selectedMonth)!).months.map { Month(date: $0) }
+                    selectedMonth.months(previous: -10, following: 10)
             }
         }
     }
@@ -111,7 +109,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                                 .font(.system(size: 24, weight: .bold))
                         }
                         .foregroundStyle(
-                            month.isInSameMonth(as: Date.now) ? .accentColor : Color.primary)
+                            month.isSameMonth(Date.now) ? .accentColor : Color.primary)
                     }
                     CalendarBodyView(month: month) { day in
                         VStack {
@@ -134,14 +132,14 @@ struct VerticalMonthsView<Content>: View where Content: View {
                         }
                         .frame(height: 100)
                         .frame(maxWidth: .infinity)
-                        .opacity(day.isInSameMonth(as: month) ? 1 : 0)
+                        .opacity(day.isSameMonth(month) ? 1 : 0)
                     }
                 }
             }
         }
         .navigationTitle(selectedMonth.formatted(.dateTime.month()))
         .toolbar {
-            if !selectedMonth.isInSameMonth(as: Date.now) {
+            if !selectedMonth.isSameMonth(Date.now) {
                 Button("Today") {
                     withAnimation {
                         selectedMonth = Date.now

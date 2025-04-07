@@ -46,7 +46,7 @@ extension Date {
         return Calendar.current.isDateInToday(self)
     }
 
-    func isInSameMonth(as date: Date) -> Bool {
+    func isSameMonth(_ date: Date) -> Bool {
         return self.startOfMonth == date.startOfMonth
     }
 
@@ -60,7 +60,7 @@ extension Date {
     }
 
     func months(previous: Int, following: Int) -> [Date] {
-        (-previous..<following).map { month in
+        (previous...following).map { month in
             Calendar.current.date(byAdding: .month, value: month, to: self)!
         }
     }

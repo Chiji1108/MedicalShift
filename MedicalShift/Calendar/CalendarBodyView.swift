@@ -47,6 +47,6 @@ struct CalendarBodyView<Content>: View where Content: View {
                 .frame(maxHeight: .infinity, alignment: .top)
         }
         .frame(height: 80)
-        .opacity(day.isInSameMonth(as: month) ? 1 : 0.4)
+        .opacity(day.isSameMonth(month) ? 1 : 0.4)
     }
 }

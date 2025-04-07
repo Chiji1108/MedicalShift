@@ -31,7 +31,7 @@ struct VerticalCalendarView: View {
                                     .font(.system(size: 24, weight: .bold))
                             }
                             .foregroundStyle(
-                                month.isInSameMonth(as: Date.now) ? .accentColor : Color.primary)
+                                month.isSameMonth(Date.now) ? .accentColor : Color.primary)
                         }
                         CalendarBodyView(month: month) { day in
                             VStack {
@@ -54,14 +54,14 @@ struct VerticalCalendarView: View {
                             }
                             .frame(height: 100)
                             .frame(maxWidth: .infinity)
-                            .opacity(day.isInSameMonth(as: month) ? 1 : 0)
+                            .opacity(day.isSameMonth(month) ? 1 : 0)
                         }
                     }
                 }
             }
             .navigationTitle(selectedMonth.formatted(.dateTime.month()))
             .toolbar {
-                if !selectedMonth.isInSameMonth(as: Date.now) {
+                if !selectedMonth.isSameMonth(Date.now) {
                     Button("Today") {
                         withAnimation {
                             selectedMonth = Date.now

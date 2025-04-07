@@ -10,7 +10,7 @@ import SwiftUI
 struct HorizontalMonthsView<Content>: View where Content: View {
     @Binding private var selectedMonth: Date
 
-    @State private var months: [Month] = []
+    @State private var months: [Date] = []
 
     let content: (_ month: Date) -> Content
     public init(
@@ -22,7 +22,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
         self.content = content
     }
 
-    private var selection: Binding<Month.ID> {
+    private var selection: Binding<Date> {
         Binding {
             selectedMonth.startOfMonth
         } set: { newValue in
@@ -33,20 +33,20 @@ struct HorizontalMonthsView<Content>: View where Content: View {
 
     var body: some View {
         TabView(selection: selection) {
-            ForEach(months) { month in
-                content(month.date)
-                    .tag(month.id)
+            ForEach(months, id: \.startOfMonth) { month in
+                content(month)
+                    .tag(month.startOfMonth)
                     .onAppear {
                         if months.first == month {
                             months.insert(
-                                Month(date: Calendar.current.date(byAdding: .month, value: -1, to: month.date)!),
+                                Calendar.current.date(byAdding: .month, value: -1, to: month)!,
                                 at: 0
                             )
                         }
 
                         if months.last == month {
                             months.append(
-                                Month(date: Calendar.current.date(byAdding: .month, value: 1, to: month.date)!),
+                                Calendar.current.date(byAdding: .month, value: 1, to: month)!,
                             )
                         }
                     }
@@ -54,16 +54,14 @@ struct HorizontalMonthsView<Content>: View where Content: View {
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .onAppear {
-            months = (Calendar.current.date(
-            byAdding: .month, value: -3, to: selectedMonth)!...Calendar.current.date(
-                byAdding: .month, value: 3, to: selectedMonth)!).months.map { Month(date: $0) }
+            if months.isEmpty {
+                months = selectedMonth.months(previous: -3, following: 3)
+            }
         }
         .onChange(of: selectedMonth) {
-            if !months.contains(where: { $0.id == selectedMonth.startOfMonth }) {
+            if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
                 months =
-                    (Calendar.current.date(
-                        byAdding: .month, value: -3, to: selectedMonth)!...Calendar.current.date(
-                        byAdding: .month, value: 3, to: selectedMonth)!).months.map { Month(date: $0) }
+                    selectedMonth.months(previous: -3, following: 3)
             }
         }
     }
@@ -92,7 +90,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                             .frame(maxHeight: .infinity, alignment: .top)
                     }
                     .frame(height: 80)
-                    .opacity(day.isInSameMonth(as: month) ? 1 : 0.4)
+                    .opacity(day.isSameMonth(month) ? 1 : 0.4)
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
@@ -100,7 +98,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
         }
         .navigationTitle(selectedMonth.formatted(.dateTime.month()))
         .toolbar {
-            if !selectedMonth.isInSameMonth(as: Date.now) {
+            if !selectedMonth.isSameMonth(Date.now) {
                 Button("Today") {
                     withAnimation {
                         selectedMonth = Date.now
