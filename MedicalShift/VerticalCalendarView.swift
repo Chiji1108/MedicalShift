@@ -69,8 +69,7 @@ struct VerticalCalendarView: View {
                     }
                 }
 
-                DatePicker("Select a month", selection: $selectedMonth, displayedComponents: .date)
-                    .labelsHidden()
+                YearMonthPicker(selectedYearMonth: $selectedMonth)
             }
         }
     }

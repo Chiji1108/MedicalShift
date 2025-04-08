@@ -146,8 +146,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                 }
             }
 
-            DatePicker("Select a month", selection: $selectedMonth, displayedComponents: .date)
-                .labelsHidden()
+            YearMonthPicker(selectedYearMonth: $selectedMonth)
         }
     }
 }
