@@ -126,7 +126,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                                 Text(day.day, format: .number.grouping(.never))
                                     .font(.system(size: 12, weight: day.isToday ? .bold : .light))
                                     .frame(width: 24, height: 24)
-                                    .foregroundStyle(day.isToday ? .white : .primary)
+                                    .foregroundStyle(day.isToday ? .white : day.isWeekend ? .secondary : .primary)
 
                             }
                             .frame(maxHeight: .infinity, alignment: .top)

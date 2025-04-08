@@ -49,7 +49,7 @@ struct VerticalCalendarView: View {
                                             .system(size: 12, weight: day.isToday ? .bold : .light)
                                         )
                                         .frame(width: 24, height: 24)
-                                        .foregroundStyle(day.isToday ? .white : .primary)
+                                        .foregroundStyle(day.isToday ? .white : day.isWeekend ? .secondary : .primary)
 
                                 }
                                 .frame(maxHeight: .infinity, alignment: .top)
