@@ -37,7 +37,7 @@ struct HorizontalCalendarView: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 .padding(.horizontal, 8)
             }
-            .navigationTitle(selectedYearMonth.formatted(.dateTime.month()))
+            .navigationTitle(selectedYearMonth.monthSymbol)
             .toolbar {
                 if !selectedYearMonth.isSameYearMonth(Date.now) {
                     Button("Today") {

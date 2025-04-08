@@ -138,7 +138,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                 }
             }
         }
-        .navigationTitle(selectedYearMonth.formatted(.dateTime.month()))
+        .navigationTitle(selectedYearMonth.monthSymbol)
         .toolbar {
             if !selectedYearMonth.isSameYearMonth(Date.now) {
                 Button("Today") {

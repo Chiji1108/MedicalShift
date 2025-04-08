@@ -28,7 +28,7 @@ struct WeekdaySymbolsView<Content>: View where Content: View {
     let symbolStyle: SymbolStyle
     let content: (_ weekdaySymbol: String) -> Content
     public init(
-        style: SymbolStyle = .short,
+        style: SymbolStyle = .veryShort,
         @ViewBuilder content: @escaping (_ weekdaySymbol: String) -> Content
     ) {
         self.symbolStyle = style

@@ -46,6 +46,14 @@ extension Date {
         return Calendar.current.isDateInToday(self)
     }
 
+    var isWeekend: Bool {
+        return Calendar.current.isDateInWeekend(self)
+    }
+
+    var monthSymbol: String {
+        return Calendar.current.standaloneMonthSymbols[self.month - 1]
+    }
+
     func isSameYearMonth(_ date: Date) -> Bool {
         return self.startOfMonth == date.startOfMonth
     }
