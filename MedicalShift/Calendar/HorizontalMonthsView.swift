@@ -108,8 +108,6 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                     }
                 }
             }
-
-            YearMonthPicker(selectedYearMonth: $selectedYearMonth)
         }
     }
 }

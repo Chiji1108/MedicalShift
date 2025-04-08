@@ -45,7 +45,9 @@ struct VerticalCalendarView: View {
                                     }
 
                                     Text(day.day, format: .number.grouping(.never))
-                                        .font(.system(size: 12, weight: day.isToday ? .bold : .light))
+                                        .font(
+                                            .system(size: 12, weight: day.isToday ? .bold : .light)
+                                        )
                                         .frame(width: 24, height: 24)
                                         .foregroundStyle(day.isToday ? .white : .primary)
 
@@ -68,8 +70,6 @@ struct VerticalCalendarView: View {
                         }
                     }
                 }
-
-                YearMonthPicker(selectedYearMonth: $selectedYearMonth)
             }
         }
     }

@@ -52,14 +52,16 @@ struct VerticalMonthsView<Content>: View where Content: View {
                         .onAppear {
                             if yearMonths.first == yearMonth {
                                 yearMonths.insert(
-                                    Calendar.current.date(byAdding: .month, value: -1, to: yearMonth)!,
+                                    Calendar.current.date(
+                                        byAdding: .month, value: -1, to: yearMonth)!,
                                     at: 0
                                 )
                             }
 
                             if yearMonths.last == yearMonth {
                                 yearMonths.append(
-                                    Calendar.current.date(byAdding: .month, value: 1, to: yearMonth)!
+                                    Calendar.current.date(
+                                        byAdding: .month, value: 1, to: yearMonth)!
                                 )
                             }
 
@@ -145,8 +147,6 @@ struct VerticalMonthsView<Content>: View where Content: View {
                     }
                 }
             }
-
-            YearMonthPicker(selectedYearMonth: $selectedYearMonth)
         }
     }
 }

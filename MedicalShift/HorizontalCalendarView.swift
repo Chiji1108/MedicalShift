@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HorizontalCalendarView: View {
     @Binding var selectedYearMonth: Date
-    
+
     var body: some View {
         NavigationStack {
             HorizontalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
@@ -46,8 +46,6 @@ struct HorizontalCalendarView: View {
                         }
                     }
                 }
-
-                YearMonthPicker(selectedYearMonth: $selectedYearMonth)
             }
         }
     }
