@@ -8,53 +8,53 @@
 import SwiftUI
 
 struct HorizontalMonthsView<Content>: View where Content: View {
-    @Binding private var selectedMonth: Date
+    @Binding private var selectedYearMonth: Date
 
-    @State private var months: [Date] = []
+    @State private var yearMonths: [Date] = []
 
-    let content: (_ month: Date) -> Content
+    let content: (_ yearMonth: Date) -> Content
     public init(
-        selectedMonth: Binding<Date>,
-        @ViewBuilder content: @escaping (_ month: Date) ->
+        selectedYearMonth: Binding<Date>,
+        @ViewBuilder content: @escaping (_ yearMonth: Date) ->
             Content
     ) {
-        self._selectedMonth = selectedMonth
+        self._selectedYearMonth = selectedYearMonth
         self.content = content
     }
 
     private var selection: Binding<Date> {
         Binding {
-            selectedMonth.startOfMonth
+            selectedYearMonth.startOfMonth
         } set: { newValue in
-            selectedMonth = newValue
+            selectedYearMonth = newValue
         }
     }
     
     private func loadMonths() {
         let buffer = 3
-        if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
-            months =
-                selectedMonth.months(prev: -buffer, next: buffer)
+        if !yearMonths.contains(where: { $0.isSameYearMonth(selectedYearMonth) }) {
+            yearMonths =
+                selectedYearMonth.months(prev: -buffer, next: buffer)
         }
     }
 
 
     var body: some View {
         TabView(selection: selection) {
-            ForEach(months, id: \.startOfMonth) { month in
-                content(month)
-                    .tag(month.startOfMonth)
+            ForEach(yearMonths, id: \.startOfMonth) { yearMonth in
+                content(yearMonth)
+                    .tag(yearMonth.startOfMonth)
                     .onAppear {
-                        if months.first == month {
-                            months.insert(
-                                Calendar.current.date(byAdding: .month, value: -1, to: month)!,
+                        if yearMonths.first == yearMonth {
+                            yearMonths.insert(
+                                Calendar.current.date(byAdding: .month, value: -1, to: yearMonth)!,
                                 at: 0
                             )
                         }
 
-                        if months.last == month {
-                            months.append(
-                                Calendar.current.date(byAdding: .month, value: 1, to: month)!,
+                        if yearMonths.last == yearMonth {
+                            yearMonths.append(
+                                Calendar.current.date(byAdding: .month, value: 1, to: yearMonth)!,
                             )
                         }
                     }
@@ -64,23 +64,23 @@ struct HorizontalMonthsView<Content>: View where Content: View {
         .onAppear {
             loadMonths()
         }
-        .onChange(of: selectedMonth) {
+        .onChange(of: selectedYearMonth) {
             loadMonths()
         }
     }
 }
 
 #Preview {
-    @Previewable @State var selectedMonth: Date = Date.now
+    @Previewable @State var selectedYearMonth: Date = Date.now
 
     NavigationStack {
-        HorizontalMonthsView(selectedMonth: $selectedMonth) { month in
+        HorizontalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
             VStack(spacing: 0) {
                 WeekdaySymbolsView { weekdaySymbol in
                     Text(weekdaySymbol)
                         .font(.system(size: 12, weight: .light))
                 }
-                CalendarBodyView(month: month) { day in
+                CalendarBodyView(yearMonth: yearMonth) { day in
                     ZStack {
                         if day.isToday {
                             RoundedRectangle(cornerRadius: 8)
@@ -93,23 +93,23 @@ struct HorizontalMonthsView<Content>: View where Content: View {
                             .frame(maxHeight: .infinity, alignment: .top)
                     }
                     .frame(height: 80)
-                    .opacity(day.isSameMonth(month) ? 1 : 0.4)
+                    .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0.4)
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 8)
         }
-        .navigationTitle(selectedMonth.formatted(.dateTime.month()))
+        .navigationTitle(selectedYearMonth.formatted(.dateTime.month()))
         .toolbar {
-            if !selectedMonth.isSameMonth(Date.now) {
+            if !selectedYearMonth.isSameYearMonth(Date.now) {
                 Button("Today") {
                     withAnimation {
-                        selectedMonth = Date.now
+                        selectedYearMonth = Date.now
                     }
                 }
             }
 
-            YearMonthPicker(selectedYearMonth: $selectedMonth)
+            YearMonthPicker(selectedYearMonth: $selectedYearMonth)
         }
     }
 }

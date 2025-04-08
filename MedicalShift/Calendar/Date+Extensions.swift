@@ -56,7 +56,7 @@ extension Date {
         return Calendar.current.isDateInToday(self)
     }
 
-    func isSameMonth(_ date: Date) -> Bool {
+    func isSameYearMonth(_ date: Date) -> Bool {
         return self.startOfMonth == date.startOfMonth
     }
 

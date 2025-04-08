@@ -8,26 +8,26 @@
 import SwiftUI
 
 struct VerticalMonthsView<Content>: View where Content: View {
-    @Binding var selectedMonth: Date
-    let content: (_ month: Date) -> Content
+    @Binding var selectedYearMonth: Date
+    let content: (_ yearMonth: Date) -> Content
 
-    @State private var months: [Date] = []
+    @State private var yearMonths: [Date] = []
     @State private var isInitialRendering = true
 
     public init(
-        selectedMonth: Binding<Date>,
-        @ViewBuilder content: @escaping (_ month: Date) -> Content
+        selectedYearMonth: Binding<Date>,
+        @ViewBuilder content: @escaping (_ yearMonth: Date) -> Content
     ) {
-        self._selectedMonth = selectedMonth
+        self._selectedYearMonth = selectedYearMonth
         self.content = content
     }
 
     private var scrolledID: Binding<Date?> {
         Binding {
-            selectedMonth.startOfMonth
+            selectedYearMonth.startOfMonth
         } set: { newValue in
             if let newValue {
-                selectedMonth = newValue
+                selectedYearMonth = newValue
             }
         }
     }
@@ -38,32 +38,32 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
     private func loadMonths() {
         let buffer = 10
-        if !months.contains(where: { $0.isSameMonth(selectedMonth) }) {
-            months =
-                selectedMonth.months(prev: -buffer, next: buffer)
+        if !yearMonths.contains(where: { $0.isSameYearMonth(selectedYearMonth) }) {
+            yearMonths =
+                selectedYearMonth.months(prev: -buffer, next: buffer)
         }
     }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
-                ForEach(months, id: \.startOfMonth) { month in
-                    content(month)
+                ForEach(yearMonths, id: \.startOfMonth) { yearMonth in
+                    content(yearMonth)
                         .onAppear {
-                            if months.first == month {
-                                months.insert(
-                                    Calendar.current.date(byAdding: .month, value: -1, to: month)!,
+                            if yearMonths.first == yearMonth {
+                                yearMonths.insert(
+                                    Calendar.current.date(byAdding: .month, value: -1, to: yearMonth)!,
                                     at: 0
                                 )
                             }
 
-                            if months.last == month {
-                                months.append(
-                                    Calendar.current.date(byAdding: .month, value: 1, to: month)!
+                            if yearMonths.last == yearMonth {
+                                yearMonths.append(
+                                    Calendar.current.date(byAdding: .month, value: 1, to: yearMonth)!
                                 )
                             }
 
-                            if isInitialRendering && month.isSameMonth(selectedMonth) {
+                            if isInitialRendering && yearMonth.isSameYearMonth(selectedYearMonth) {
                                 isInitialRendering = false
                             }
                         }
@@ -76,7 +76,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
         .onAppear {
             loadMonths()
         }
-        .onChange(of: selectedMonth) {
+        .onChange(of: selectedYearMonth) {
             loadMonths()
         }
         .onDisappear {
@@ -86,7 +86,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
 }
 
 #Preview {
-    @Previewable @State var selectedMonth: Date = Date.now
+    @Previewable @State var selectedYearMonth: Date = Date.now
 
     NavigationStack {
         VStack(spacing: 0) {
@@ -98,19 +98,19 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
             Divider()
 
-            VerticalMonthsView(selectedMonth: $selectedMonth) { month in
+            VerticalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 4) {
-                    CalendarHeaderView(month: month) {
+                    CalendarHeaderView(yearMonth: yearMonth) {
                         VStack {
-                            Text(month.formatted(.dateTime.year()))
+                            Text(yearMonth.formatted(.dateTime.year()))
                                 .font(.system(size: 12, weight: .bold))
-                            Text(month.formatted(.dateTime.month()))
+                            Text(yearMonth.formatted(.dateTime.month()))
                                 .font(.system(size: 24, weight: .bold))
                         }
                         .foregroundStyle(
-                            month.isSameMonth(Date.now) ? .accentColor : Color.primary)
+                            yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
                     }
-                    CalendarBodyView(month: month) { day in
+                    CalendarBodyView(yearMonth: yearMonth) { day in
                         VStack {
                             Divider()
 
@@ -131,22 +131,22 @@ struct VerticalMonthsView<Content>: View where Content: View {
                         }
                         .frame(height: 100)
                         .frame(maxWidth: .infinity)
-                        .opacity(day.isSameMonth(month) ? 1 : 0)
+                        .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0)
                     }
                 }
             }
         }
-        .navigationTitle(selectedMonth.formatted(.dateTime.month()))
+        .navigationTitle(selectedYearMonth.formatted(.dateTime.month()))
         .toolbar {
-            if !selectedMonth.isSameMonth(Date.now) {
+            if !selectedYearMonth.isSameYearMonth(Date.now) {
                 Button("Today") {
                     withAnimation {
-                        selectedMonth = Date.now
+                        selectedYearMonth = Date.now
                     }
                 }
             }
 
-            YearMonthPicker(selectedYearMonth: $selectedMonth)
+            YearMonthPicker(selectedYearMonth: $selectedYearMonth)
         }
     }
 }

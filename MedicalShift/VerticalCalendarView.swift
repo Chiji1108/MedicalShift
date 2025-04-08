@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct VerticalCalendarView: View {
-    @Binding var selectedMonth: Date
+    @Binding var selectedYearMonth: Date
 
     var body: some View {
         NavigationStack {
@@ -21,19 +21,19 @@ struct VerticalCalendarView: View {
 
                 Divider()
 
-                VerticalMonthsView(selectedMonth: $selectedMonth) { month in
+                VerticalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
-                        CalendarHeaderView(month: month) {
+                        CalendarHeaderView(yearMonth: yearMonth) {
                             VStack {
-                                Text(month.formatted(.dateTime.year()))
+                                Text(yearMonth.formatted(.dateTime.year()))
                                     .font(.system(size: 12, weight: .bold))
-                                Text(month.formatted(.dateTime.month()))
+                                Text(yearMonth.formatted(.dateTime.month()))
                                     .font(.system(size: 24, weight: .bold))
                             }
                             .foregroundStyle(
-                                month.isSameMonth(Date.now) ? .accentColor : Color.primary)
+                                yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
                         }
-                        CalendarBodyView(month: month) { day in
+                        CalendarBodyView(yearMonth: yearMonth) { day in
                             VStack {
                                 Divider()
 
@@ -54,22 +54,22 @@ struct VerticalCalendarView: View {
                             }
                             .frame(height: 100)
                             .frame(maxWidth: .infinity)
-                            .opacity(day.isSameMonth(month) ? 1 : 0)
+                            .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0)
                         }
                     }
                 }
             }
-            .navigationTitle(selectedMonth.formatted(.dateTime.month()))
+            .navigationTitle(selectedYearMonth.formatted(.dateTime.month()))
             .toolbar {
-                if !selectedMonth.isSameMonth(Date.now) {
+                if !selectedYearMonth.isSameYearMonth(Date.now) {
                     Button("Today") {
                         withAnimation {
-                            selectedMonth = Date.now
+                            selectedYearMonth = Date.now
                         }
                     }
                 }
 
-                YearMonthPicker(selectedYearMonth: $selectedMonth)
+                YearMonthPicker(selectedYearMonth: $selectedYearMonth)
             }
         }
     }
@@ -77,5 +77,5 @@ struct VerticalCalendarView: View {
 
 #Preview {
     @Previewable @State var selectedMonth = Date.now
-    VerticalCalendarView(selectedMonth: $selectedMonth)
+    VerticalCalendarView(selectedYearMonth: $selectedMonth)
 }

@@ -14,17 +14,17 @@ struct CalendarHeaderView<Content>: View where Content: View {
         case leading
         case trailing
     }
-    private let month: Date
+    private let yearMonth: Date
     private let alignment: SymbolAlignment
     let content: () -> Content
 
     public init(
-        month: Date,
+        yearMonth: Date,
         alignment: SymbolAlignment = .startOfMonth,
         @ViewBuilder content: @escaping () ->
             Content
     ) {
-        self.month = month
+        self.yearMonth = yearMonth
         self.alignment = alignment
         self.content = content
     }
@@ -33,7 +33,7 @@ struct CalendarHeaderView<Content>: View where Content: View {
         case .startOfMonth:
             HStack(spacing: 0) {
                 ForEach(1...Calendar.current.weekdaySymbols.count, id: \.self) { i in
-                    if i == month.startOfMonth.weekday {
+                    if i == yearMonth.startOfMonth.weekday {
                         content()
                             .frame(maxWidth: .infinity)
                     } else {
@@ -57,33 +57,49 @@ struct CalendarHeaderView<Content>: View where Content: View {
 }
 
 #Preview("startOfMonth") {
-    let month = Date()
-    CalendarHeaderView(month: month) {
-        Text(month.formatted(.dateTime.month()))
-            .font(.system(size: 24, weight: .bold))
+    let yearMonth = Date()
+    CalendarHeaderView(yearMonth: yearMonth) {
+        VStack {
+            Text(yearMonth.formatted(.dateTime.year()))
+                .font(.system(size: 12, weight: .bold))
+            Text(yearMonth.formatted(.dateTime.month()))
+                .font(.system(size: 24, weight: .bold))
+        }
     }
 }
 
 #Preview("center") {
-    let month = Date()
-    CalendarHeaderView(month: month, alignment: .center) {
-        Text(month.formatted(.dateTime.month()))
-            .font(.system(size: 24, weight: .bold))
+    let yearMonth = Date()
+    CalendarHeaderView(yearMonth: yearMonth, alignment: .center) {
+        VStack {
+            Text(yearMonth.formatted(.dateTime.year()))
+                .font(.system(size: 12, weight: .bold))
+            Text(yearMonth.formatted(.dateTime.month()))
+                .font(.system(size: 24, weight: .bold))
+        }
     }
 }
 
 #Preview("leading") {
-    let month = Date()
-    CalendarHeaderView(month: month, alignment: .leading) {
-        Text(month.formatted(.dateTime.month()))
-            .font(.system(size: 24, weight: .bold))
+    let yearMonth = Date()
+    CalendarHeaderView(yearMonth: yearMonth, alignment: .leading) {
+        VStack {
+            Text(yearMonth.formatted(.dateTime.year()))
+                .font(.system(size: 12, weight: .bold))
+            Text(yearMonth.formatted(.dateTime.month()))
+                .font(.system(size: 24, weight: .bold))
+        }
     }
 }
 
 #Preview("trailing") {
-    let month = Date()
-    CalendarHeaderView(month: month, alignment: .trailing) {
-        Text(month.formatted(.dateTime.month()))
-            .font(.system(size: 24, weight: .bold))
+    let yearMonth = Date()
+    CalendarHeaderView(yearMonth: yearMonth, alignment: .trailing) {
+        VStack {
+            Text(yearMonth.formatted(.dateTime.year()))
+                .font(.system(size: 12, weight: .bold))
+            Text(yearMonth.formatted(.dateTime.month()))
+                .font(.system(size: 24, weight: .bold))
+        }
     }
 }

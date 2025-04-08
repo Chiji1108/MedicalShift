@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct CalendarBodyView<Content>: View where Content: View {
-    let month: Date
+    let yearMonth: Date
     let content: (_ day: Date) -> Content
     public init(
-        month: Date,
+        yearMonth: Date,
         @ViewBuilder content: @escaping (_ day: Date) -> Content
     ) {
-        self.month = month
+        self.yearMonth = yearMonth
         self.content = content
     }
 
@@ -25,7 +25,7 @@ struct CalendarBodyView<Content>: View where Content: View {
                 count: Calendar.current.weekdaySymbols.count
             ), spacing: 0
         ) {
-            ForEach(month.calnedarDates, id: \.self) { day in
+            ForEach(yearMonth.calnedarDates, id: \.self) { day in
                 content(day)
                     .frame(maxWidth: .infinity)
             }
@@ -34,8 +34,8 @@ struct CalendarBodyView<Content>: View where Content: View {
 }
 
 #Preview {
-    let month = Date()
-    CalendarBodyView(month: month) { day in
+    let yearMonth = Date()
+    CalendarBodyView(yearMonth: yearMonth) { day in
         ZStack {
             if day.isToday {
                 RoundedRectangle(cornerRadius: 8)
@@ -47,6 +47,6 @@ struct CalendarBodyView<Content>: View where Content: View {
                 .frame(maxHeight: .infinity, alignment: .top)
         }
         .frame(height: 80)
-        .opacity(day.isSameMonth(month) ? 1 : 0.4)
+        .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0.4)
     }
 }

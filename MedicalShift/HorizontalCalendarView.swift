@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct HorizontalCalendarView: View {
-    @Binding var selectedMonth: Date
+    @Binding var selectedYearMonth: Date
     
     var body: some View {
         NavigationStack {
-            HorizontalMonthsView(selectedMonth: $selectedMonth) { month in
+            HorizontalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 0) {
                     WeekdaySymbolsView { weekdaySymbol in
                         Text(weekdaySymbol)
                             .font(.system(size: 12, weight: .light))
                     }
-                    CalendarBodyView(month: month) { day in
+                    CalendarBodyView(yearMonth: yearMonth) { day in
                         ZStack {
                             if day.isToday {
                                 RoundedRectangle(cornerRadius: 8)
@@ -31,23 +31,23 @@ struct HorizontalCalendarView: View {
                                 .frame(maxHeight: .infinity, alignment: .top)
                         }
                         .frame(height: 80)
-                        .opacity(day.isSameMonth(month) ? 1 : 0.4)
+                        .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0.4)
                     }
                 }
                 .frame(maxHeight: .infinity, alignment: .top)
                 .padding(.horizontal, 8)
             }
-            .navigationTitle(selectedMonth.formatted(.dateTime.month()))
+            .navigationTitle(selectedYearMonth.formatted(.dateTime.month()))
             .toolbar {
-                if !selectedMonth.isSameMonth(Date.now) {
+                if !selectedYearMonth.isSameYearMonth(Date.now) {
                     Button("Today") {
                         withAnimation {
-                            selectedMonth = Date.now
+                            selectedYearMonth = Date.now
                         }
                     }
                 }
 
-                YearMonthPicker(selectedYearMonth: $selectedMonth)
+                YearMonthPicker(selectedYearMonth: $selectedYearMonth)
             }
         }
     }
@@ -55,5 +55,5 @@ struct HorizontalCalendarView: View {
 
 #Preview {
     @Previewable @State var selectedMonth = Date.now
-    HorizontalCalendarView(selectedMonth: $selectedMonth)
+    HorizontalCalendarView(selectedYearMonth: $selectedMonth)
 }
