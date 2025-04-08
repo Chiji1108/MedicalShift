@@ -14,21 +14,11 @@ extension Date {
     }
 
     var year: Int {
-        get {
-            return Calendar.current.component(.year, from: self)
-        }
-        set {
-            self = Calendar.current.date(from: DateComponents(year: newValue, month: self.month))!
-        }
+        return Calendar.current.component(.year, from: self)
     }
 
     var month: Int {
-        get {
-            return Calendar.current.component(.month, from: self)
-        }
-        set {
-            self = Calendar.current.date(from: DateComponents(year: self.year, month: newValue))!
-        }
+        return Calendar.current.component(.month, from: self)
     }
 
     var day: Int {
