@@ -76,24 +76,25 @@ struct HorizontalMonthsView<Content>: View where Content: View {
     NavigationStack {
         HorizontalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
             VStack(spacing: 0) {
-                WeekdaySymbolsView { weekdaySymbol in
-                    Text(weekdaySymbol)
+                WeekBodyView { date in
+                    Text(date.weekdaySymbol(.veryShort))
                         .font(.system(size: 12, weight: .light))
                 }
-                CalendarBodyView(yearMonth: yearMonth) { day in
+
+                CalendarBodyView(yearMonth: yearMonth) { date in
                     ZStack {
-                        if day.isToday {
+                        if date.isToday {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(.gray.opacity(0.2))
                         }
 
-                        Text(day.day, format: .number.grouping(.never))
+                        Text(date.day, format: .number.grouping(.never))
                             .padding(4)
                             .font(.system(size: 12, weight: .light))
                             .frame(maxHeight: .infinity, alignment: .top)
                     }
                     .frame(height: 80)
-                    .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0.4)
+                    .opacity(date.isSameYearMonth(yearMonth) ? 1 : 0.4)
                 }
             }
             .frame(maxHeight: .infinity, alignment: .top)

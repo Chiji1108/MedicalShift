@@ -13,11 +13,12 @@ struct VerticalCalendarView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                WeekdaySymbolsView { weekdaySymbol in
-                    Text(weekdaySymbol)
+                WeekBodyView { date in
+                    Text(date.weekdaySymbol(.veryShort))
                         .font(.system(size: 12, weight: .light))
+                        .foregroundStyle(date.isWeekend ? .secondary : .primary)
                 }
-                .background(.ultraThinMaterial)
+                .background(.gray.opacity(0.1))
 
                 Divider()
 
@@ -33,32 +34,32 @@ struct VerticalCalendarView: View {
                             .foregroundStyle(
                                 yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
                         }
-                        CalendarBodyView(yearMonth: yearMonth) { day in
+                        CalendarBodyView(yearMonth: yearMonth) { date in
                             VStack {
                                 Divider()
 
                                 ZStack {
-                                    if day.isToday {
+                                    if date.isToday {
                                         Circle()
                                             .frame(width: 24, height: 24)
                                             .foregroundStyle(.tint)
                                     }
 
-                                    Text(day.day, format: .number.grouping(.never))
+                                    Text(date.day, format: .number.grouping(.never))
                                         .font(
-                                            .system(size: 12, weight: day.isToday ? .bold : .light)
+                                            .system(size: 12, weight: date.isToday ? .bold : .light)
                                         )
                                         .frame(width: 24, height: 24)
                                         .foregroundStyle(
-                                            day.isToday
-                                                ? .white : day.isWeekend ? .secondary : .primary)
+                                            date.isToday
+                                                ? .white : date.isWeekend ? .secondary : .primary)
 
                                 }
                                 .frame(maxHeight: .infinity, alignment: .top)
                             }
                             .frame(height: 100)
                             .frame(maxWidth: .infinity)
-                            .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0)
+                            .opacity(date.isSameYearMonth(yearMonth) ? 1 : 0)
                         }
                     }
                 }

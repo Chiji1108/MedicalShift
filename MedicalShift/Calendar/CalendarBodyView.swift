@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CalendarBodyView<Content>: View where Content: View {
     let yearMonth: Date
-    let content: (_ day: Date) -> Content
+    let content: (_ date: Date) -> Content
     public init(
         yearMonth: Date,
-        @ViewBuilder content: @escaping (_ day: Date) -> Content
+        @ViewBuilder content: @escaping (_ date: Date) -> Content
     ) {
         self.yearMonth = yearMonth
         self.content = content
@@ -34,19 +34,10 @@ struct CalendarBodyView<Content>: View where Content: View {
 }
 
 #Preview {
-    let yearMonth = Date()
-    CalendarBodyView(yearMonth: yearMonth) { day in
-        ZStack {
-            if day.isToday {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.gray.opacity(0.2))
-            }
-
-            Text("\(day.day)")
-                .font(.system(size: 12, weight: .light))
-                .frame(maxHeight: .infinity, alignment: .top)
-        }
-        .frame(height: 80)
-        .opacity(day.isSameYearMonth(yearMonth) ? 1 : 0.4)
+    CalendarBodyView(yearMonth: Date.now) { date in
+        Text(date.day, format: .number.grouping(.never))
+            .font(.system(size: 12, weight: .light))
+            .frame(maxHeight: .infinity, alignment: .top)
+            .frame(height: 60)
     }
 }
