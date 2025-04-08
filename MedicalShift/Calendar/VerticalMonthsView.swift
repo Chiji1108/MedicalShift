@@ -102,7 +102,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
             VerticalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 4) {
-                    CalendarHeaderView(yearMonth: yearMonth) {
+                    MonthSymbolView(yearMonth: yearMonth) {
                         VStack {
                             Text(yearMonth.formatted(.dateTime.year()))
                                 .font(.system(size: 12, weight: .bold))
@@ -126,7 +126,9 @@ struct VerticalMonthsView<Content>: View where Content: View {
                                 Text(day.day, format: .number.grouping(.never))
                                     .font(.system(size: 12, weight: day.isToday ? .bold : .light))
                                     .frame(width: 24, height: 24)
-                                    .foregroundStyle(day.isToday ? .white : day.isWeekend ? .secondary : .primary)
+                                    .foregroundStyle(
+                                        day.isToday ? .white : day.isWeekend ? .secondary : .primary
+                                    )
 
                             }
                             .frame(maxHeight: .infinity, alignment: .top)
@@ -138,7 +140,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                 }
             }
         }
-        .navigationTitle(selectedYearMonth.monthSymbol)
+        .navigationTitle(selectedYearMonth.monthSymbol(.full))
         .toolbar {
             if !selectedYearMonth.isSameYearMonth(Date.now) {
                 Button("Today") {

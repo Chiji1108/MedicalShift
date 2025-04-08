@@ -99,7 +99,7 @@ struct HorizontalMonthsView<Content>: View where Content: View {
             .frame(maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 8)
         }
-        .navigationTitle(selectedYearMonth.monthSymbol)
+        .navigationTitle(selectedYearMonth.monthSymbol(.full))
         .toolbar {
             if !selectedYearMonth.isSameYearMonth(Date.now) {
                 Button("Today") {

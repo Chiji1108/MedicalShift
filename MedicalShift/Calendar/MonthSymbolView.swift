@@ -1,5 +1,5 @@
 //
-//  CalendarHeaderView.swift
+//  MonthSymbolView.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CalendarHeaderView<Content>: View where Content: View {
+struct MonthSymbolView<Content>: View where Content: View {
     enum SymbolAlignment {
         case startOfMonth
         case center
@@ -58,7 +58,7 @@ struct CalendarHeaderView<Content>: View where Content: View {
 
 #Preview("startOfMonth") {
     let yearMonth = Date()
-    CalendarHeaderView(yearMonth: yearMonth) {
+    MonthSymbolView(yearMonth: yearMonth) {
         VStack {
             Text(yearMonth.formatted(.dateTime.year()))
                 .font(.system(size: 12, weight: .bold))
@@ -70,7 +70,7 @@ struct CalendarHeaderView<Content>: View where Content: View {
 
 #Preview("center") {
     let yearMonth = Date()
-    CalendarHeaderView(yearMonth: yearMonth, alignment: .center) {
+    MonthSymbolView(yearMonth: yearMonth, alignment: .center) {
         VStack {
             Text(yearMonth.formatted(.dateTime.year()))
                 .font(.system(size: 12, weight: .bold))
@@ -82,7 +82,7 @@ struct CalendarHeaderView<Content>: View where Content: View {
 
 #Preview("leading") {
     let yearMonth = Date()
-    CalendarHeaderView(yearMonth: yearMonth, alignment: .leading) {
+    MonthSymbolView(yearMonth: yearMonth, alignment: .leading) {
         VStack {
             Text(yearMonth.formatted(.dateTime.year()))
                 .font(.system(size: 12, weight: .bold))
@@ -94,7 +94,7 @@ struct CalendarHeaderView<Content>: View where Content: View {
 
 #Preview("trailing") {
     let yearMonth = Date()
-    CalendarHeaderView(yearMonth: yearMonth, alignment: .trailing) {
+    MonthSymbolView(yearMonth: yearMonth, alignment: .trailing) {
         VStack {
             Text(yearMonth.formatted(.dateTime.year()))
                 .font(.system(size: 12, weight: .bold))
