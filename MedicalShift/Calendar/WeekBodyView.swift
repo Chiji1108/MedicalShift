@@ -35,3 +35,21 @@ struct WeekBodyView<Content>: View where Content: View {
             .font(.system(size: 12, weight: .light))
     }
 }
+
+#Preview("Calendar Header") {
+    let yearMonth = Date.now
+    
+    WeekBodyView { date in
+        if date.weekday == yearMonth.startOfMonth.weekday {
+            VStack {
+                Text(yearMonth.formatted(.dateTime.year()))
+                    .font(.system(size: 12, weight: .bold))
+                Text(yearMonth.formatted(.dateTime.month()))
+                    .font(.system(size: 24, weight: .bold))
+            }
+            .foregroundStyle(yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
+        } else {
+            Spacer()
+        }
+    }
+}

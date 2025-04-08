@@ -24,16 +24,20 @@ struct VerticalCalendarView: View {
 
                 VerticalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
-                        MonthSymbolView(yearMonth: yearMonth) {
-                            VStack {
-                                Text(yearMonth.formatted(.dateTime.year()))
-                                    .font(.system(size: 12, weight: .bold))
-                                Text(yearMonth.formatted(.dateTime.month()))
-                                    .font(.system(size: 24, weight: .bold))
+                        WeekBodyView { date in
+                            if date.weekday == yearMonth.startOfMonth.weekday {
+                                VStack {
+                                    Text(yearMonth.formatted(.dateTime.year()))
+                                        .font(.system(size: 12, weight: .bold))
+                                    Text(yearMonth.formatted(.dateTime.month()))
+                                        .font(.system(size: 24, weight: .bold))
+                                }
+                                .foregroundStyle(yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
+                            } else {
+                                Spacer()
                             }
-                            .foregroundStyle(
-                                yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
                         }
+                        
                         CalendarBodyView(yearMonth: yearMonth) { date in
                             VStack {
                                 Divider()
