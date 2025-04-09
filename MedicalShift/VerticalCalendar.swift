@@ -1,5 +1,5 @@
 //
-//  VerticalCalendarView.swift
+//  VerticalCalendar.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct VerticalCalendarView: View {
+struct VerticalCalendar: View {
     @Binding var selectedYearMonth: Date
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                WeekBodyView { date in
+                WeekRow { date in
                     Text(date.weekdaySymbol(.veryShort))
                         .font(.system(size: 12, weight: .light))
                         .foregroundStyle(date.isWeekend ? .secondary : .primary)
@@ -22,9 +22,9 @@ struct VerticalCalendarView: View {
 
                 Divider()
 
-                VerticalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
+                VCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
-                        WeekBodyView { date in
+                        WeekRow { date in
                             if date.weekday == yearMonth.startOfMonth.weekday {
                                 VStack {
                                     Text(yearMonth.formatted(.dateTime.year()))
@@ -32,13 +32,13 @@ struct VerticalCalendarView: View {
                                     Text(yearMonth.formatted(.dateTime.month()))
                                         .font(.system(size: 24, weight: .bold))
                                 }
-                                .foregroundStyle(yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
+                                .foregroundStyle(yearMonth.isInSameYearMonth(Date.now) ? .accentColor : Color.primary)
                             } else {
                                 Spacer()
                             }
                         }
                         
-                        CalendarBodyView(yearMonth: yearMonth) { date in
+                        WeekList(yearMonth: yearMonth) { date in
                             VStack {
                                 Divider()
 
@@ -49,7 +49,7 @@ struct VerticalCalendarView: View {
                                             .foregroundStyle(.tint)
                                     }
 
-                                    Text(date.day, format: .number.grouping(.never))
+                                    Text(date.day, format: .number)
                                         .font(
                                             .system(size: 12, weight: date.isToday ? .bold : .light)
                                         )
@@ -63,14 +63,14 @@ struct VerticalCalendarView: View {
                             }
                             .frame(height: 100)
                             .frame(maxWidth: .infinity)
-                            .opacity(date.isSameYearMonth(yearMonth) ? 1 : 0)
+                            .opacity(date.isInSameYearMonth(yearMonth) ? 1 : 0)
                         }
                     }
                 }
             }
             .navigationTitle(selectedYearMonth.monthSymbol(.full))
             .toolbar {
-                if !selectedYearMonth.isSameYearMonth(Date.now) {
+                if !selectedYearMonth.isInSameYearMonth(Date.now) {
                     Button("Today") {
                         withAnimation {
                             selectedYearMonth = Date.now
@@ -84,5 +84,5 @@ struct VerticalCalendarView: View {
 
 #Preview {
     @Previewable @State var selectedMonth = Date.now
-    VerticalCalendarView(selectedYearMonth: $selectedMonth)
+    VerticalCalendar(selectedYearMonth: $selectedMonth)
 }

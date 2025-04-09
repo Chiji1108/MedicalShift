@@ -8,17 +8,6 @@
 import Foundation
 
 extension Date {
-    enum SymbolStyle {
-        case full
-        case short
-        case veryShort
-    }
-
-    var startOfMonth: Date {
-        return Calendar.current.date(
-            from: Calendar.current.dateComponents([.year, .month], from: self))!
-    }
-
     var year: Int {
         return Calendar.current.component(.year, from: self)
     }
@@ -39,21 +28,28 @@ extension Date {
         return Calendar.current.component(.weekOfMonth, from: self)
     }
 
-    var startOfWeek: Date {
-        return Calendar.current.date(
-            from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
-    }
-
-    var weeksInMonth: Int {
-        return Calendar.current.range(of: .weekOfMonth, in: .month, for: self)!.count
-    }
-
     var isToday: Bool {
         return Calendar.current.isDateInToday(self)
     }
 
     var isWeekend: Bool {
         return Calendar.current.isDateInWeekend(self)
+    }
+    
+    var startOfMonth: Date {
+        return Calendar.current.date(
+            from: Calendar.current.dateComponents([.year, .month], from: self))!
+    }
+    
+    func isInSameYearMonth(_ date: Date) -> Bool {
+        return self.startOfMonth == date.startOfMonth
+    }
+    
+    // MARK: Standalone Symbol
+    enum SymbolStyle {
+        case full
+        case short
+        case veryShort
     }
 
     func monthSymbol(_ style: SymbolStyle) -> String {
@@ -77,20 +73,18 @@ extension Date {
             return Calendar.current.veryShortStandaloneWeekdaySymbols[self.weekday - 1]
         }
     }
-
-    func isSameYearMonth(_ date: Date) -> Bool {
-        return self.startOfMonth == date.startOfMonth
+    
+    // MARK: for WeekList
+    var weeksInMonth: Int {
+        return Calendar.current.range(of: .weekOfMonth, in: .month, for: self)!.count
     }
 
-    var calnedarDates: [Date] {
-        let startDate = self.startOfMonth.startOfWeek
-        let totalDays = self.weeksInMonth * Calendar.current.weekdaySymbols.count
-
-        return (0..<totalDays).map { day in
-            Calendar.current.date(byAdding: .day, value: day, to: startDate)!
-        }
+    // MARK: for WeekRow
+    var startOfWeek: Date {
+        return Calendar.current.date(
+            from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
     }
-
+    
     var weekDates: [Date] {
         let startDate = self.startOfWeek
         let totalDays = Calendar.current.weekdaySymbols.count
@@ -100,6 +94,7 @@ extension Date {
         }
     }
 
+    // MARK: for CalendarList
     func months(prev: Int, next: Int) -> [Date] {
         (prev...next).map { month in
             Calendar.current.date(byAdding: .month, value: month, to: self)!

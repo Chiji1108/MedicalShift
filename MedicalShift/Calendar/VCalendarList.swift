@@ -1,5 +1,5 @@
 //
-//  VerticalMonthsView.swift
+//  VCalendarList.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VerticalMonthsView<Content>: View where Content: View {
+struct VCalendarList<Content>: View where Content: View {
     @Binding var selectedYearMonth: Date
     let content: (_ yearMonth: Date) -> Content
 
@@ -38,7 +38,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
     private func loadMonths() {
         let buffer = 10
-        if !yearMonths.contains(where: { $0.isSameYearMonth(selectedYearMonth) }) {
+        if !yearMonths.contains(where: { $0.isInSameYearMonth(selectedYearMonth) }) {
             yearMonths =
                 selectedYearMonth.months(prev: -buffer, next: buffer)
         }
@@ -65,7 +65,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                                 )
                             }
 
-                            if isInitialRendering && yearMonth.isSameYearMonth(selectedYearMonth) {
+                            if isInitialRendering && yearMonth.isInSameYearMonth(selectedYearMonth) {
                                 isInitialRendering = false
                             }
                         }
@@ -92,7 +92,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
     NavigationStack {
         VStack(spacing: 0) {
-            WeekBodyView { date in
+            WeekRow { date in
                 Text(date.weekdaySymbol(.veryShort))
                     .font(.system(size: 12, weight: .light))
                     .foregroundStyle(date.isWeekend ? .secondary : .primary)
@@ -101,9 +101,9 @@ struct VerticalMonthsView<Content>: View where Content: View {
 
             Divider()
 
-            VerticalMonthsView(selectedYearMonth: $selectedYearMonth) { yearMonth in
+            VCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 4) {
-                    WeekBodyView { date in
+                    WeekRow { date in
                         if date.weekday == yearMonth.startOfMonth.weekday {
                             VStack {
                                 Text(yearMonth.formatted(.dateTime.year()))
@@ -111,13 +111,13 @@ struct VerticalMonthsView<Content>: View where Content: View {
                                 Text(yearMonth.formatted(.dateTime.month()))
                                     .font(.system(size: 24, weight: .bold))
                             }
-                            .foregroundStyle(yearMonth.isSameYearMonth(Date.now) ? .accentColor : Color.primary)
+                            .foregroundStyle(yearMonth.isInSameYearMonth(Date.now) ? .accentColor : Color.primary)
                         } else {
                             Spacer()
                         }
                     }
 
-                    CalendarBodyView(yearMonth: yearMonth) { date in
+                    WeekList(yearMonth: yearMonth) { date in
                         VStack {
                             Divider()
 
@@ -128,7 +128,7 @@ struct VerticalMonthsView<Content>: View where Content: View {
                                         .foregroundStyle(.tint)
                                 }
 
-                                Text(date.day, format: .number.grouping(.never))
+                                Text(date.day, format: .number)
                                     .font(.system(size: 12, weight: date.isToday ? .bold : .light))
                                     .frame(width: 24, height: 24)
                                     .foregroundStyle(
@@ -141,14 +141,14 @@ struct VerticalMonthsView<Content>: View where Content: View {
                         }
                         .frame(height: 100)
                         .frame(maxWidth: .infinity)
-                        .opacity(date.isSameYearMonth(yearMonth) ? 1 : 0)
+                        .opacity(date.isInSameYearMonth(yearMonth) ? 1 : 0)
                     }
                 }
             }
         }
         .navigationTitle(selectedYearMonth.monthSymbol(.full))
         .toolbar {
-            if !selectedYearMonth.isSameYearMonth(Date.now) {
+            if !selectedYearMonth.isInSameYearMonth(Date.now) {
                 Button("Today") {
                     withAnimation {
                         selectedYearMonth = Date.now

@@ -13,11 +13,11 @@ struct ContentView: View {
     var body: some View {
         TabView {
             Tab("Horizontal", systemImage: "distribute.horizontal") {
-                HorizontalCalendarView(selectedYearMonth: $selectedYearMonth)
+                HorizontalCalendar(selectedYearMonth: $selectedYearMonth)
             }
 
             Tab("Vertical", systemImage: "distribute.vertical") {
-                VerticalCalendarView(selectedYearMonth: $selectedYearMonth)
+                VerticalCalendar(selectedYearMonth: $selectedYearMonth)
             }
         }
     }
