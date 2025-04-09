@@ -1,10 +1,3 @@
-//
-//  Date+Extensions.swift
-//  MedicalShift
-//
-//  Created by 千々岩真吾 on 2025/04/04.
-//
-
 import Foundation
 
 extension Date {

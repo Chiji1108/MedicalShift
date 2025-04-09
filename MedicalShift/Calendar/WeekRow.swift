@@ -1,10 +1,3 @@
-//
-//  WeekRow.swift
-//  MedicalShift
-//
-//  Created by 千々岩真吾 on 2025/04/08.
-//
-
 import SwiftUI
 
 struct WeekRow<Content>: View where Content: View {
