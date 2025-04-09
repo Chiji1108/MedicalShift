@@ -29,8 +29,7 @@ struct ScrollableCalendarList<Content>: View where Content: View {
                     content(yearMonth)
                         .onAppear {
                             appendMonthsIfNeeded(for: yearMonth)
-                            if isInitialRendering && yearMonth.isInSameYearMonth(selectedYearMonth)
-                            {
+                            if isInitialRendering, yearMonth.isInSameYearMonth(selectedYearMonth) {
                                 isInitialRendering = false
                             }
                         }
