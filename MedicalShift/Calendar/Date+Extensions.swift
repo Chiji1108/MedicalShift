@@ -45,7 +45,7 @@ extension Date {
         return self.startOfMonth == date.startOfMonth
     }
 
-    // MARK: Standalone Symbol
+    // MARK: - Standalone Symbol
     enum SymbolStyle {
         case full
         case short
@@ -74,7 +74,7 @@ extension Date {
         }
     }
 
-    // MARK: for WeekRow
+    // MARK: - for WeekRow
     var startOfWeek: Date {
         return Calendar.current.date(
             from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
@@ -89,12 +89,12 @@ extension Date {
         }
     }
 
-    // MARK: for WeekList
+    // MARK: - for WeekList
     var weeksInMonth: Int {
         return Calendar.current.range(of: .weekOfMonth, in: .month, for: self)!.count
     }
 
-    // MARK: for CalendarList
+    // MARK: - for CalendarList
     func monthsAround(bufferSize: Int) -> [Date] {
         (-bufferSize...bufferSize).map { month in
             Calendar.current.date(byAdding: .month, value: month, to: self)!

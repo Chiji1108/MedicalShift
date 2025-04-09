@@ -10,6 +10,7 @@ import SwiftUI
 struct WeekList<Content>: View where Content: View {
     let yearMonth: Date
     let content: (_ date: Date) -> Content
+
     public init(
         yearMonth: Date,
         @ViewBuilder content: @escaping (_ date: Date) -> Content
@@ -20,16 +21,22 @@ struct WeekList<Content>: View where Content: View {
 
     var body: some View {
         VStack {
-            ForEach(
-                (0..<yearMonth.weeksInMonth).map { i in
-                    Calendar.current.date(
-                        byAdding: .weekOfMonth, value: i, to: yearMonth.startOfMonth)!
-                }, id: \.self
-            ) { weekDate in
+            ForEach(weeksInCurrentMonth(), id: \.self) { weekDate in
                 WeekRow(date: weekDate) { date in
                     content(date)
                 }
             }
+        }
+    }
+
+    // MARK: - Private Methods
+    private func weeksInCurrentMonth() -> [Date] {
+        (0..<yearMonth.weeksInMonth).map { weekIndex in
+            Calendar.current.date(
+                byAdding: .weekOfMonth,
+                value: weekIndex,
+                to: yearMonth.startOfMonth
+            )!
         }
     }
 }
