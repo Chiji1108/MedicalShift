@@ -22,29 +22,6 @@ struct ScrollableCalendarList<Content>: View where Content: View {
         self.content = content
     }
 
-    private var scrolledID: Binding<Date?> {
-        Binding {
-            selectedYearMonth.startOfMonth
-        } set: { newValue in
-            if let newValue {
-                selectedYearMonth = newValue
-            }
-        }
-    }
-
-    private var initialScrolledID: Binding<Date?> {
-        Binding(get: { nil }, set: { _ in })
-    }
-
-    private func loadMonths() {
-        let bufferSize = 10
-        let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
-
-        guard !isCurrentMonthLoaded else { return }
-
-        yearMonths = selectedYearMonth.monthsAround(bufferSize: bufferSize)
-    }
-
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
@@ -86,6 +63,30 @@ struct ScrollableCalendarList<Content>: View where Content: View {
         .onDisappear {
             isInitialRendering = true
         }
+    }
+
+    // MARK: - Private Methods
+    private var scrolledID: Binding<Date?> {
+        Binding {
+            selectedYearMonth.startOfMonth
+        } set: { newValue in
+            if let newValue {
+                selectedYearMonth = newValue
+            }
+        }
+    }
+
+    private var initialScrolledID: Binding<Date?> {
+        Binding(get: { nil }, set: { _ in })
+    }
+
+    private func loadMonths() {
+        let bufferSize = 10
+        let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
+
+        guard !isCurrentMonthLoaded else { return }
+
+        yearMonths = selectedYearMonth.monthsAround(bufferSize: bufferSize)
     }
 }
 

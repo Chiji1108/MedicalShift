@@ -22,24 +22,6 @@ struct PagedCalendarList<Content>: View where Content: View {
         self.content = content
     }
 
-    private var selection: Binding<Date> {
-        Binding {
-            selectedYearMonth.startOfMonth
-        } set: { newValue in
-            selectedYearMonth = newValue
-        }
-    }
-    
-    private func loadMonths() {
-        let bufferSize = 3
-        let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
-        
-        guard !isCurrentMonthLoaded else { return }
-        
-        yearMonths = selectedYearMonth.monthsAround(bufferSize: bufferSize)
-    }
-
-
     var body: some View {
         TabView(selection: selection) {
             ForEach(yearMonths, id: \.startOfMonth) { yearMonth in
@@ -68,6 +50,24 @@ struct PagedCalendarList<Content>: View where Content: View {
         .onChange(of: selectedYearMonth) {
             loadMonths()
         }
+    }
+
+    // MARK: - Private Methods
+    private var selection: Binding<Date> {
+        Binding {
+            selectedYearMonth.startOfMonth
+        } set: { newValue in
+            selectedYearMonth = newValue
+        }
+    }
+    
+    private func loadMonths() {
+        let bufferSize = 3
+        let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
+        
+        guard !isCurrentMonthLoaded else { return }
+        
+        yearMonths = selectedYearMonth.monthsAround(bufferSize: bufferSize)
     }
 }
 
