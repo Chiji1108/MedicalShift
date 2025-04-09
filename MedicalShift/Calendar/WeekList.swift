@@ -20,9 +20,12 @@ struct WeekList<Content>: View where Content: View {
 
     var body: some View {
         VStack {
-            ForEach((0..<yearMonth.weeksInMonth).map { i in
-                Calendar.current.date(byAdding: .weekOfMonth, value: i, to: yearMonth.startOfMonth)!
-            }, id: \.self) { weekDate in
+            ForEach(
+                (0..<yearMonth.weeksInMonth).map { i in
+                    Calendar.current.date(
+                        byAdding: .weekOfMonth, value: i, to: yearMonth.startOfMonth)!
+                }, id: \.self
+            ) { weekDate in
                 WeekRow(date: weekDate) { date in
                     content(date)
                 }
