@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct PagedCalendarList<Content>: View where Content: View {
-    @Binding private var selectedYearMonth: Date
+    @Binding var selectedYearMonth: Date
+    let content: (_ yearMonth: Date) -> Content
 
     @State private var yearMonths: [Date] = []
+    @State private var isInitialRendering = true
 
-    let content: (_ yearMonth: Date) -> Content
     public init(
         selectedYearMonth: Binding<Date>,
         @ViewBuilder content: @escaping (_ yearMonth: Date) -> Content
@@ -22,35 +23,58 @@ struct PagedCalendarList<Content>: View where Content: View {
     }
 
     var body: some View {
-        TabView(selection: selection) {
-            ForEach(yearMonths, id: \.startOfMonth) { yearMonth in
-                content(yearMonth)
-                    .tag(yearMonth.startOfMonth)
-                    .onAppear {
-                        appendMonthsIfNeeded(for: yearMonth)
+        GeometryReader { geometry in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 0) {
+                    ForEach(yearMonths, id: \.startOfMonth) { yearMonth in
+                        content(yearMonth)
+                            .onAppear {
+                                appendMonthsIfNeeded(for: yearMonth)
+                                if isInitialRendering,
+                                    yearMonth.isInSameYearMonth(selectedYearMonth)
+                                {
+                                    isInitialRendering = false
+                                }
+                            }
+                            .frame(width: geometry.size.width)
                     }
+                }
+                .scrollTargetLayout()
             }
-        }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .onAppear {
-            loadMonthsIfNeeded()
-        }
-        .onChange(of: selectedYearMonth) {
-            loadMonthsIfNeeded()
+            .scrollTargetBehavior(.paging)
+            .defaultScrollAnchor(.center)
+            .scrollPosition(
+                id: isInitialRendering ? initialScrolledID : scrolledID, anchor: .center
+            )
+            .onAppear {
+                loadMonthsIfNeeded()
+            }
+            .onChange(of: selectedYearMonth) {
+                loadMonthsIfNeeded()
+            }
+            .onDisappear {
+                isInitialRendering = true
+            }
         }
     }
 
     // MARK: - Private Methods
-    private var selection: Binding<Date> {
+    private var scrolledID: Binding<Date?> {
         Binding {
             selectedYearMonth.startOfMonth
         } set: { newValue in
-            selectedYearMonth = newValue
+            if let newValue {
+                selectedYearMonth = newValue
+            }
         }
     }
 
+    private var initialScrolledID: Binding<Date?> {
+        Binding(get: { nil }, set: { _ in })
+    }
+
     private func loadMonthsIfNeeded() {
-        let bufferSize = 3
+        let bufferSize = 10
         let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
 
         guard !isCurrentMonthLoaded else { return }
