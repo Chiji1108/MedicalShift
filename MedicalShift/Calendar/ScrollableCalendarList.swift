@@ -28,21 +28,7 @@ struct ScrollableCalendarList<Content>: View where Content: View {
                 ForEach(yearMonths, id: \.startOfMonth) { yearMonth in
                     content(yearMonth)
                         .onAppear {
-                            if yearMonths.first == yearMonth {
-                                yearMonths.insert(
-                                    Calendar.current.date(
-                                        byAdding: .month, value: -1, to: yearMonth)!,
-                                    at: 0
-                                )
-                            }
-
-                            if yearMonths.last == yearMonth {
-                                yearMonths.append(
-                                    Calendar.current.date(
-                                        byAdding: .month, value: 1, to: yearMonth)!
-                                )
-                            }
-
+                            appendMonthsIfNeeded(for: yearMonth)
                             if isInitialRendering && yearMonth.isInSameYearMonth(selectedYearMonth)
                             {
                                 isInitialRendering = false
@@ -55,10 +41,10 @@ struct ScrollableCalendarList<Content>: View where Content: View {
         .defaultScrollAnchor(.center)
         .scrollPosition(id: isInitialRendering ? initialScrolledID : scrolledID, anchor: .center)
         .onAppear {
-            loadMonths()
+            loadMonthsIfNeeded()
         }
         .onChange(of: selectedYearMonth) {
-            loadMonths()
+            loadMonthsIfNeeded()
         }
         .onDisappear {
             isInitialRendering = true
@@ -80,13 +66,27 @@ struct ScrollableCalendarList<Content>: View where Content: View {
         Binding(get: { nil }, set: { _ in })
     }
 
-    private func loadMonths() {
+    private func loadMonthsIfNeeded() {
         let bufferSize = 10
         let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
 
         guard !isCurrentMonthLoaded else { return }
 
         yearMonths = selectedYearMonth.monthsAround(bufferSize: bufferSize)
+    }
+
+    private func appendMonthsIfNeeded(for yearMonth: Date) {
+        if yearMonths.first == yearMonth,
+            let previousMonth = Calendar.current.date(byAdding: .month, value: -1, to: yearMonth)
+        {
+            yearMonths.insert(previousMonth, at: 0)
+        }
+
+        if yearMonths.last == yearMonth,
+            let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: yearMonth)
+        {
+            yearMonths.append(nextMonth)
+        }
     }
 }
 
