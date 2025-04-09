@@ -44,7 +44,5 @@ struct WeekList<Content>: View where Content: View {
 #Preview {
     WeekList(yearMonth: Date.now) { date in
         Text(date.day, format: .number)
-            .font(.system(size: 12, weight: .light))
-            .frame(maxHeight: .infinity, alignment: .top)
     }
 }

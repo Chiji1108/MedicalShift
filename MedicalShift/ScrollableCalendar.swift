@@ -13,6 +13,7 @@ struct ScrollableCalendar: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // MARK: Weekday Symbols
                 WeekRow { date in
                     Text(date.weekdaySymbol(.veryShort))
                         .font(.system(size: 12, weight: .light))
@@ -24,6 +25,7 @@ struct ScrollableCalendar: View {
 
                 ScrollableCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
+                        // MARK: YearMonth Symbol
                         WeekRow { date in
                             if date.weekday == yearMonth.startOfMonth.weekday {
                                 VStack {
@@ -38,6 +40,7 @@ struct ScrollableCalendar: View {
                             }
                         }
                         
+                        // MARK: Calendar Body
                         WeekList(yearMonth: yearMonth) { date in
                             VStack {
                                 Divider()
@@ -61,8 +64,7 @@ struct ScrollableCalendar: View {
                                 }
                                 .frame(maxHeight: .infinity, alignment: .top)
                             }
-                            .frame(height: 100)
-                            .frame(maxWidth: .infinity)
+                            .frame(height: 96)
                             .opacity(date.isInSameYearMonth(yearMonth) ? 1 : 0)
                         }
                     }

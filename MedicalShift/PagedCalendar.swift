@@ -14,11 +14,13 @@ struct PagedCalendar: View {
         NavigationStack {
             PagedCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 0) {
+                    // MARK: Weekday Symbols
                     WeekRow { date in
                         Text(date.weekdaySymbol(.veryShort))
                             .font(.system(size: 12, weight: .light))
                     }
 
+                    // MARK: Calendar Body
                     WeekList(yearMonth: yearMonth) { date in
                         ZStack {
                             if date.isToday {

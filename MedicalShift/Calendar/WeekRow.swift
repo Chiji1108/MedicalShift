@@ -29,14 +29,20 @@ struct WeekRow<Content>: View where Content: View {
     }
 }
 
-#Preview("Weekday Symbols") {
+#Preview {
+    WeekRow { date in
+        Text(date.day, format: .number)
+    }
+}
+
+#Preview("Weekday Symbols", traits: .sizeThatFitsLayout) {
     WeekRow { date in
         Text(date.weekdaySymbol(.veryShort))
             .font(.system(size: 12, weight: .light))
     }
 }
 
-#Preview("Calendar Header") {
+#Preview("YearMonth Symbol", traits: .sizeThatFitsLayout) {
     let yearMonth = Date.now
 
     WeekRow { date in
