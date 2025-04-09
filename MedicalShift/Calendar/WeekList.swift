@@ -21,8 +21,8 @@ struct WeekList<Content>: View where Content: View {
 
     var body: some View {
         VStack {
-            ForEach(weeksInCurrentMonth(), id: \.self) { weekDate in
-                WeekRow(date: weekDate) { date in
+            ForEach(weeksInCurrentMonth(), id: \.self) { startOfWeek in
+                WeekRow(date: startOfWeek) { date in
                     content(date)
                 }
             }
