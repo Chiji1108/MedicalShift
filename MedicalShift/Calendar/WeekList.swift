@@ -31,12 +31,12 @@ struct WeekList<Content>: View where Content: View {
 
     // MARK: - Private Methods
     private func weeksInCurrentMonth() -> [Date] {
-        (0..<yearMonth.weeksInMonth).map { weekIndex in
+        (0..<yearMonth.weeksInMonth).compactMap { weekIndex in
             Calendar.current.date(
                 byAdding: .weekOfMonth,
                 value: weekIndex,
                 to: yearMonth.startOfMonth
-            )!
+            )
         }
     }
 }

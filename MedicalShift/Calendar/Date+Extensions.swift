@@ -84,8 +84,8 @@ extension Date {
         let startDate = self.startOfWeek
         let totalDays = Calendar.current.weekdaySymbols.count
 
-        return (0..<totalDays).map { day in
-            Calendar.current.date(byAdding: .day, value: day, to: startDate)!
+        return (0..<totalDays).compactMap { day in
+            Calendar.current.date(byAdding: .day, value: day, to: startDate)
         }
     }
 
@@ -96,8 +96,8 @@ extension Date {
 
     // MARK: - for CalendarList
     func monthsAround(bufferSize: Int) -> [Date] {
-        (-bufferSize...bufferSize).map { month in
-            Calendar.current.date(byAdding: .month, value: month, to: self)!
+        (-bufferSize...bufferSize).compactMap { month in
+            Calendar.current.date(byAdding: .month, value: month, to: self)
         }
     }
 }
