@@ -9,10 +9,10 @@ struct CalendarList<Content>: View where Content: View {
     @Binding var selectedYearMonth: Date
     let content: (_ yearMonth: Date) -> Content
     let direction: CalendarScrollDirection
-    
+
     @State private var yearMonths: [Date] = []
     @State private var isInitialRendering = true
-    
+
     public init(
         selectedYearMonth: Binding<Date>,
         direction: CalendarScrollDirection = .vertical,
@@ -22,7 +22,7 @@ struct CalendarList<Content>: View where Content: View {
         self.content = content
         self.direction = direction
     }
-    
+
     var body: some View {
         Group {
             switch direction {
@@ -42,7 +42,7 @@ struct CalendarList<Content>: View where Content: View {
             isInitialRendering = true
         }
     }
-    
+
     private var verticalLayout: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
@@ -61,7 +61,7 @@ struct CalendarList<Content>: View where Content: View {
         .defaultScrollAnchor(.center)
         .scrollPosition(id: isInitialRendering ? initialScrolledID : scrolledID, anchor: .center)
     }
-    
+
     private var horizontalLayout: some View {
         GeometryReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
@@ -70,7 +70,9 @@ struct CalendarList<Content>: View where Content: View {
                         content(yearMonth)
                             .onAppear {
                                 appendMonthsIfNeeded(for: yearMonth)
-                                if isInitialRendering, yearMonth.isInSameYearMonth(selectedYearMonth) {
+                                if isInitialRendering,
+                                    yearMonth.isInSameYearMonth(selectedYearMonth)
+                                {
                                     isInitialRendering = false
                                 }
                             }
@@ -81,10 +83,11 @@ struct CalendarList<Content>: View where Content: View {
             }
             .scrollTargetBehavior(.paging)
             .defaultScrollAnchor(.center)
-            .scrollPosition(id: isInitialRendering ? initialScrolledID : scrolledID, anchor: .center)
+            .scrollPosition(
+                id: isInitialRendering ? initialScrolledID : scrolledID, anchor: .center)
         }
     }
-    
+
     // MARK: - Private Methods
     private var scrolledID: Binding<Date?> {
         Binding {
@@ -95,36 +98,36 @@ struct CalendarList<Content>: View where Content: View {
             }
         }
     }
-    
+
     private var initialScrolledID: Binding<Date?> {
         Binding(get: { nil }, set: { _ in })
     }
-    
+
     private func loadMonthsIfNeeded() {
         let bufferSize = 10
         let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
-        
+
         guard !isCurrentMonthLoaded else { return }
-        
+
         yearMonths = selectedYearMonth.monthsAround(bufferSize: bufferSize)
     }
-    
+
     private func appendMonthsIfNeeded(for yearMonth: Date) {
         if yearMonths.first == yearMonth,
-           let previousMonth = Calendar.current.date(byAdding: .month, value: -1, to: yearMonth)
+            let previousMonth = Calendar.current.date(byAdding: .month, value: -1, to: yearMonth)
         {
             yearMonths.insert(previousMonth, at: 0)
         }
-        
+
         if yearMonths.last == yearMonth,
-           let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: yearMonth)
+            let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: yearMonth)
         {
             yearMonths.append(nextMonth)
         }
     }
 }
 
-#Preview("Vertical Calendar") {
+#Preview("Scrollable Calendar") {
     @Previewable @State var selectedYearMonth: Date = Date.now
 
     NavigationStack {
@@ -200,8 +203,7 @@ struct CalendarList<Content>: View where Content: View {
     }
 }
 
-
-#Preview("Horizontal Calendar") {
+#Preview("Paged Calendar") {
     @Previewable @State var selectedYearMonth: Date = Date.now
 
     NavigationStack {
