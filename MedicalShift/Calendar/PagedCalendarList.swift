@@ -31,11 +31,12 @@ struct PagedCalendarList<Content>: View where Content: View {
     }
     
     private func loadMonths() {
-        let buffer = 3
-        if !yearMonths.contains(where: { $0.isInSameYearMonth(selectedYearMonth) }) {
-            yearMonths =
-                selectedYearMonth.months(prev: -buffer, next: buffer)
-        }
+        let monthRange = -3...3
+        let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
+        
+        guard !isCurrentMonthLoaded else { return }
+        
+        yearMonths = selectedYearMonth.monthRange(in: monthRange)
     }
 
 

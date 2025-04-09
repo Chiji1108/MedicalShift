@@ -37,11 +37,12 @@ struct ScrollableCalendarList<Content>: View where Content: View {
     }
 
     private func loadMonths() {
-        let buffer = 10
-        if !yearMonths.contains(where: { $0.isInSameYearMonth(selectedYearMonth) }) {
-            yearMonths =
-                selectedYearMonth.months(prev: -buffer, next: buffer)
-        }
+        let monthRange = -10...10
+        let isCurrentMonthLoaded = yearMonths.contains { $0.isInSameYearMonth(selectedYearMonth) }
+
+        guard !isCurrentMonthLoaded else { return }
+
+        yearMonths = selectedYearMonth.monthRange(in: monthRange)
     }
 
     var body: some View {
@@ -65,7 +66,8 @@ struct ScrollableCalendarList<Content>: View where Content: View {
                                 )
                             }
 
-                            if isInitialRendering && yearMonth.isInSameYearMonth(selectedYearMonth) {
+                            if isInitialRendering && yearMonth.isInSameYearMonth(selectedYearMonth)
+                            {
                                 isInitialRendering = false
                             }
                         }
@@ -111,7 +113,9 @@ struct ScrollableCalendarList<Content>: View where Content: View {
                                 Text(yearMonth.formatted(.dateTime.month()))
                                     .font(.system(size: 24, weight: .bold))
                             }
-                            .foregroundStyle(yearMonth.isInSameYearMonth(Date.now) ? .accentColor : Color.primary)
+                            .foregroundStyle(
+                                yearMonth.isInSameYearMonth(Date.now) ? .accentColor : Color.primary
+                            )
                         } else {
                             Spacer()
                         }
