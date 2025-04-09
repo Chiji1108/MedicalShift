@@ -23,7 +23,7 @@ struct ScrollableCalendar: View {
 
                 Divider()
 
-                ScrollableCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+                CalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
                         // MARK: YearMonth Symbol
                         WeekRow { date in
@@ -34,12 +34,14 @@ struct ScrollableCalendar: View {
                                     Text(yearMonth.formatted(.dateTime.month()))
                                         .font(.system(size: 24, weight: .bold))
                                 }
-                                .foregroundStyle(yearMonth.isInSameYearMonth(Date.now) ? .accentColor : Color.primary)
+                                .foregroundStyle(
+                                    yearMonth.isInSameYearMonth(Date.now) ? .accentColor : Color.primary
+                                )
                             } else {
                                 Spacer()
                             }
                         }
-                        
+
                         // MARK: Calendar Body
                         WeekList(yearMonth: yearMonth) { date in
                             VStack {
@@ -53,13 +55,12 @@ struct ScrollableCalendar: View {
                                     }
 
                                     Text(date.day, format: .number)
-                                        .font(
-                                            .system(size: 12, weight: date.isToday ? .bold : .light)
-                                        )
+                                        .font(.system(size: 12, weight: date.isToday ? .bold : .light))
                                         .frame(width: 24, height: 24)
                                         .foregroundStyle(
                                             date.isToday
-                                                ? .white : date.isWeekend ? .secondary : .primary)
+                                                ? .white : date.isWeekend ? .secondary : .primary
+                                        )
 
                                 }
                                 .frame(maxHeight: .infinity, alignment: .top)

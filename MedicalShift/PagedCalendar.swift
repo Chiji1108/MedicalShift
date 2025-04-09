@@ -12,7 +12,7 @@ struct PagedCalendar: View {
 
     var body: some View {
         NavigationStack {
-            PagedCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+            CalendarList(selectedYearMonth: $selectedYearMonth, direction: .horizontal) { yearMonth in
                 VStack(spacing: 0) {
                     // MARK: Weekday Symbols
                     WeekRow { date in
