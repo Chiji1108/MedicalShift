@@ -1,5 +1,5 @@
 //
-//  VerticalCalendar.swift
+//  ScrollableCalendar.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VerticalCalendar: View {
+struct ScrollableCalendar: View {
     @Binding var selectedYearMonth: Date
 
     var body: some View {
@@ -22,7 +22,7 @@ struct VerticalCalendar: View {
 
                 Divider()
 
-                VCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+                ScrollableCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
                         WeekRow { date in
                             if date.weekday == yearMonth.startOfMonth.weekday {
@@ -84,5 +84,5 @@ struct VerticalCalendar: View {
 
 #Preview {
     @Previewable @State var selectedMonth = Date.now
-    VerticalCalendar(selectedYearMonth: $selectedMonth)
+    ScrollableCalendar(selectedYearMonth: $selectedMonth)
 }

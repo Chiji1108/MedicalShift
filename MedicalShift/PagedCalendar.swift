@@ -1,5 +1,5 @@
 //
-//  HorizontalCalendar.swift
+//  PagedCalendar.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct HorizontalCalendar: View {
+struct PagedCalendar: View {
     @Binding var selectedYearMonth: Date
 
     var body: some View {
         NavigationStack {
-            HCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+            PagedCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 0) {
                     WeekRow { date in
                         Text(date.weekdaySymbol(.veryShort))
@@ -54,5 +54,5 @@ struct HorizontalCalendar: View {
 
 #Preview {
     @Previewable @State var selectedMonth = Date.now
-    HorizontalCalendar(selectedYearMonth: $selectedMonth)
+    PagedCalendar(selectedYearMonth: $selectedMonth)
 }

@@ -1,5 +1,5 @@
 //
-//  VCalendarList.swift
+//  ScrollableCalendarList.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VCalendarList<Content>: View where Content: View {
+struct ScrollableCalendarList<Content>: View where Content: View {
     @Binding var selectedYearMonth: Date
     let content: (_ yearMonth: Date) -> Content
 
@@ -101,7 +101,7 @@ struct VCalendarList<Content>: View where Content: View {
 
             Divider()
 
-            VCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+            ScrollableCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                 VStack(spacing: 4) {
                     WeekRow { date in
                         if date.weekday == yearMonth.startOfMonth.weekday {

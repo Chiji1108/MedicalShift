@@ -1,5 +1,5 @@
 //
-//  HCalendarList.swift
+//  PagedCalendarList.swift
 //  MedicalShift
 //
 //  Created by 千々岩真吾 on 2025/04/05.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HCalendarList<Content>: View where Content: View {
+struct PagedCalendarList<Content>: View where Content: View {
     @Binding private var selectedYearMonth: Date
 
     @State private var yearMonths: [Date] = []
@@ -74,7 +74,7 @@ struct HCalendarList<Content>: View where Content: View {
     @Previewable @State var selectedYearMonth: Date = Date.now
 
     NavigationStack {
-        HCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+        PagedCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
             VStack(spacing: 0) {
                 WeekRow { date in
                     Text(date.weekdaySymbol(.veryShort))

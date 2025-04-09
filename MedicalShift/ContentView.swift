@@ -12,12 +12,12 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            Tab("Horizontal", systemImage: "distribute.horizontal") {
-                HorizontalCalendar(selectedYearMonth: $selectedYearMonth)
+            Tab("Paged", systemImage: "book") {
+                PagedCalendar(selectedYearMonth: $selectedYearMonth)
             }
 
-            Tab("Vertical", systemImage: "distribute.vertical") {
-                VerticalCalendar(selectedYearMonth: $selectedYearMonth)
+            Tab("Scroll", systemImage: "scroll") {
+                ScrollableCalendar(selectedYearMonth: $selectedYearMonth)
             }
         }
     }
