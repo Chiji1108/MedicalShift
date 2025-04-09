@@ -74,11 +74,6 @@ extension Date {
         }
     }
 
-    // MARK: for WeekList
-    var weeksInMonth: Int {
-        return Calendar.current.range(of: .weekOfMonth, in: .month, for: self)!.count
-    }
-
     // MARK: for WeekRow
     var startOfWeek: Date {
         return Calendar.current.date(
@@ -94,9 +89,14 @@ extension Date {
         }
     }
 
+    // MARK: for WeekList
+    var weeksInMonth: Int {
+        return Calendar.current.range(of: .weekOfMonth, in: .month, for: self)!.count
+    }
+
     // MARK: for CalendarList
-    func monthRange(in range: ClosedRange<Int>) -> [Date] {
-        range.map { month in
+    func monthsAround(bufferSize: Int) -> [Date] {
+        (-bufferSize...bufferSize).map { month in
             Calendar.current.date(byAdding: .month, value: month, to: self)!
         }
     }
