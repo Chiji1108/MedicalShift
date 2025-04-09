@@ -21,8 +21,8 @@ struct WeekRow<Content>: View where Content: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(date.weekDates, id: \.self) { d in
-                content(d)
+            ForEach(date.weekDates, id: \.self) { weekDate in
+                content(weekDate)
                     .frame(maxWidth: .infinity)
             }
         }
@@ -38,7 +38,7 @@ struct WeekRow<Content>: View where Content: View {
 
 #Preview("Calendar Header") {
     let yearMonth = Date.now
-    
+
     WeekRow { date in
         if date.weekday == yearMonth.startOfMonth.weekday {
             VStack {
