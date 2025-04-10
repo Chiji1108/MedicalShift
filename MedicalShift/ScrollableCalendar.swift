@@ -23,7 +23,7 @@ struct ScrollableCalendar: View {
 
                 Divider()
 
-                CalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
+                ScrollableCalendarList(selectedYearMonth: $selectedYearMonth) { yearMonth in
                     VStack(spacing: 4) {
                         // MARK: YearMonth Symbol
                         WeekRow { date in
