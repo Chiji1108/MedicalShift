@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct PagedCalendarList<Content>: View where Content: View {
+public struct PagedCalendarList<Content>: View where Content: View {
     @Binding var selectedYearMonth: Date
     let content: (_ yearMonth: Date) -> Content
 
@@ -15,7 +15,7 @@ struct PagedCalendarList<Content>: View where Content: View {
         self.content = content
     }
 
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 0) {

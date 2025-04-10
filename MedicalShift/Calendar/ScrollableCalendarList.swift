@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ScrollableCalendarList<Content>: View where Content: View {
+public struct ScrollableCalendarList<Content>: View where Content: View {
     @Binding var selectedYearMonth: Date
     let content: (_ yearMonth: Date) -> Content
 
@@ -15,7 +15,7 @@ struct ScrollableCalendarList<Content>: View where Content: View {
         self.content = content
     }
 
-    var body: some View {
+    public var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(yearMonths, id: \.startOfMonth) { yearMonth in

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WeekList<Content>: View where Content: View {
+public struct WeekList<Content>: View where Content: View {
     let yearMonth: Date
     let content: (_ date: Date) -> Content
 
@@ -12,7 +12,7 @@ struct WeekList<Content>: View where Content: View {
         self.content = content
     }
 
-    var body: some View {
+    public var body: some View {
         VStack {
             ForEach(weeksInCurrentMonth(), id: \.self) { startOfWeek in
                 WeekRow(date: startOfWeek) { date in

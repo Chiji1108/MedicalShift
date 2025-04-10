@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WeekRow<Content>: View where Content: View {
+public struct WeekRow<Content>: View where Content: View {
     let date: Date
     let content: (_ date: Date) -> Content
 
@@ -12,7 +12,7 @@ struct WeekRow<Content>: View where Content: View {
         self.content = content
     }
 
-    var body: some View {
+    public var body: some View {
         HStack(spacing: 0) {
             ForEach(date.weekDates, id: \.self) { weekDate in
                 content(weekDate)

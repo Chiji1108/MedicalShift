@@ -1,6 +1,6 @@
 import Foundation
 
-extension Date {
+public extension Date {
     /// Returns the numeric year value of this date
     var year: Int {
         Calendar.current.component(.year, from: self)
